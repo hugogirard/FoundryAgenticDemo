@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/APIS/" />
+  <Folder Name="/MCP/">
+    <Project Path="MCP/crimeMCPServer/Crime/Crime.csproj" Id="d485486d-4bcf-4578-b319-06c8f601fc59" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+</Solution>
