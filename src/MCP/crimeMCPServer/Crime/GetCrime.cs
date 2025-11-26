@@ -24,10 +24,15 @@ public class CrimeResearcher
     [Function(name: "getCrime")]
     public async Task<IEnumerable<Models.Crime>> Run([McpToolTrigger("getCrime","Get list of crimes in Skyrim")] ToolInvocationContext context,
                                                      [McpToolProperty("city", "The city where the crime is committed.", isRequired: false)]string city,
-                                                     [McpToolProperty("description", "The description of the crime", isRequired: true)] string description) 
+                                                     [McpToolProperty("description", "The description of the crime", isRequired: false)] string description) 
     {
         try
         {
+            if (string.IsNullOrEmpty(city) && string.IsNullOrEmpty(description)) 
+            {
+                throw new Exception("No city or description of crime were passed in parameters");
+            }
+
             var crimes = await _crimeRepository.GetCrimesAsync(city, description);
             return crimes;
         }

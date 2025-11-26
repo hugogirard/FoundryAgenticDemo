@@ -23,16 +23,21 @@ public class CrimeRepository : ICrimeRepository
     {
         QueryDefinition query;
 
-        if (!string.IsNullOrEmpty(city)) 
+        if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(description))
         {
-            query = new QueryDefinition(query: "SELECT TOP 10 * FROM c WHERE FullTextContains(c.description, @description) AND c.city = @city")
+            query = new QueryDefinition(query: "SELECT * FROM c WHERE FullTextContains(c.description, @description) AND c.city = @city")
                                 .WithParameter("@description", description)
-                                .WithParameter("@city",city);
+                                .WithParameter("@city", city);
+        }
+        else if (!string.IsNullOrEmpty(city)) 
+        {
+            query = new QueryDefinition(query: "SELECT * FROM c WHERE c.city = @city")         
+                                .WithParameter("@city", city);
         }
         else
         {
             query = new QueryDefinition(query: "SELECT TOP 10 * FROM c WHERE FullTextContains(c.description, @description)")
-                                .WithParameter("@description", description);                                
+                                .WithParameter("@description", description);
         }
             
         var feeds = _container.GetItemQueryIterator<Models.Crime>(query);
