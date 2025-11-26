@@ -32,6 +32,63 @@ resource cosmosDB 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' = {
   }
 }
 
+resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2025-11-01-preview' = {
+  parent: cosmosDB
+  name: 'skyrim'
+  properties: {
+    resource: {
+      id: 'skyrim'
+    }
+    options: {
+      autoscaleSettings: {
+        maxThroughput: 4000
+      }
+    }
+  }
+}
+
+// resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2025-11-01-preview' = {
+//   parent: db
+//   name: 'crime'
+//   properties: {
+//     resource: {
+//       id: 'crime'
+//       partitionKey: {
+//         paths: [
+//           '/city'
+//         ]
+//         kind: 'Hash'
+//       }
+//       vectorEmbeddingPolicy: {
+//         vectorEmbeddings: [
+//           {
+//             dataType: 'float32'
+//             dimensions: 1536
+//             distanceFunction: 'cosine'
+//             path: '/descriptionVector'
+//           }
+//         ]
+//       }
+//       fullTextPolicy: {
+//         defaultLanguage: 'en-US'
+//         fullTextPaths: [
+//           {
+//             language: 'en-US'
+//             path: '/description'
+//           }
+//         ]
+//       }
+//       indexingPolicy: {
+//         fullTextIndexes: [
+//           {
+//             path: '/description'
+//           }
+//         ]
+//       }
+//     }
+//   }
+// }
+
 resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageResourceName
   location: location

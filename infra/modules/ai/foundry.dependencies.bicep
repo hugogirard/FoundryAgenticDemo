@@ -44,6 +44,22 @@ resource cosmosDB 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' = {
   }
 }
 
+resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2025-11-01-preview' = {
+  parent: cosmosDB
+  name: 'enterprise_memory'
+  properties: {
+    resource: {
+      id: 'enterprise_memory'
+    }
+    options: {
+      autoscaleSettings: {
+        maxThroughput: 6000
+      }
+      //throughput: 3000
+    }
+  }
+}
+
 // AI Search creation
 
 resource aiSearch 'Microsoft.Search/searchServices@2024-06-01-preview' = {

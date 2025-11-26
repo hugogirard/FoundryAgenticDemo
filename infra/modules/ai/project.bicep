@@ -6,6 +6,7 @@ param displayName string
 param aiSearchName string
 param cosmosDBName string
 param azureStorageName string
+param useAzureManagedResource bool
 
 resource searchService 'Microsoft.Search/searchServices@2024-06-01-preview' existing = {
   name: aiSearchName
@@ -22,7 +23,7 @@ resource account 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' exist
   scope: resourceGroup()
 }
 
-resource project 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' = {
+resource projectOwnResource 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' = if (!useAzureManagedResource) {
   parent: account
   name: projectName
   location: location
@@ -77,12 +78,29 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-previ
   }
 }
 
-output projectName string = project.name
-output projectId string = project.id
-output projectPrincipalId string = project.identity.principalId
+resource projectAzureManagedResource 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' = if (useAzureManagedResource) {
+  parent: account
+  name: projectName
+  location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    description: projectDescription
+    displayName: displayName
+  }
+}
+
+output projectName string = useAzureManagedResource ? projectAzureManagedResource.name : projectOwnResource.name
+output projectId string = useAzureManagedResource ? projectAzureManagedResource.id : projectOwnResource.id
+output projectPrincipalId string = useAzureManagedResource
+  ? projectAzureManagedResource.identity.principalId
+  : projectOwnResource.identity.principalId
 
 #disable-next-line BCP053
-output projectWorkspaceId string = project.properties.internalId
+output projectWorkspaceId string = useAzureManagedResource
+  ? projectAzureManagedResource.properties.internalId
+  : projectOwnResource.properties.internalId
 
 // return the BYO connection names
 output cosmosDBConnection string = cosmosDBName
