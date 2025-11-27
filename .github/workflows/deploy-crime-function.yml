@@ -1,4 +1,4 @@
-name: Deploy Skillsets to Azure Function App
+name: Deploy MCP Skyrim Crime Server
 
 on:
     workflow_dispatch:
