@@ -25,6 +25,8 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     appServicePlanName: '${abbrs.webServerFarms}func-${resourceToken}'
     storageFunctionResourceName: 'strf${replace(resourceToken,'-','')}'
     functionResourceName: '${abbrs.webSitesFunctions}crime-${resourceToken}'
+    applicationInsightResourceName: '${abbrs.insightsComponents}${resourceToken}'
+    logAnalyticResourceName: '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
   }
 }
 

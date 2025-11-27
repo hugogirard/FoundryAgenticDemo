@@ -3,10 +3,28 @@ param appServicePlanName string
 param storageName string
 param functionResourceName string
 param cosmosDBResourceName string
+param logAnalyticResourceName string
+param applicationInsightResourceName string
 param tags object
 
 resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2025-11-01-preview' existing = {
   name: cosmosDBResourceName
+}
+
+resource loganalytics 'Microsoft.OperationalInsights/workspaces@2025-07-01' = {
+  name: logAnalyticResourceName
+  location: location
+  properties: {}
+}
+
+resource appinsight 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightResourceName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: loganalytics.id
+  }
 }
 
 resource asp 'Microsoft.Web/serverfarms@2025-03-01' = {
