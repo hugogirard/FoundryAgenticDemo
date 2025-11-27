@@ -39,6 +39,7 @@ jobs:
                   projectNameResourceName: ${{ secrets.AZURE_FOUNDRY_PROJECT_RESOURCE_NAME }}
                   projectWorkspaceId: ${{ secrets.PROJECT_WORKSPACE_ID }}
                   resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+                  foundryProjectprincipalId: ${{ secrets.FOUNDRY_PROJECT_PROJECTPRINCIPALID }}
 
             - uses: azure/arm-deploy@v2
               with:

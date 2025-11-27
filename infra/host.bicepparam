@@ -21,3 +21,5 @@ param projectNameResourceName = '__projectNameResourceName__'
 param projectWorkspaceId = '__projectWorkspaceId__'
 
 param resourceGroupName = '__resourceGroupName__'
+
+param foundryProjectprincipalId = '__foundryProjectprincipalId__'

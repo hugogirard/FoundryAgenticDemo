@@ -219,6 +219,7 @@ output azureFoundryResourceName string = foundry.outputs.accountName
 output azureFoundryResourceId string = foundry.outputs.accountID
 output azureFoundryProjectResourceName string = foundryProject.outputs.projectName
 output azureFoundryProjectResourceId string = foundryProject.outputs.projectId
+output foundryProjectProjectPrincipalId string = foundryProject.outputs.projectPrincipalId
 output aiSearchConnection string = foundryProject.outputs.aiSearchConnection
 output azureStorageConnection string = foundryProject.outputs.azureStorageConnection
 output cosmosDBConnection string = foundryProject.outputs.cosmosDBConnection
