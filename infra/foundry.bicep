@@ -189,58 +189,6 @@ module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = {
   }
 }
 
-// var projectCapHost string = 'capskyrim'
-
-// // Add capability host
-// module projectCapabilityHost 'modules/ai/add-project-capability-host.bicep' = if (deployFoundry && !useAzureManagedResource) {
-//   scope: rg
-//   params: {
-//     #disable-next-line BCP318
-//     accountName: foundry.outputs.accountName
-//     #disable-next-line BCP318
-//     aiSearchConnection: foundryProject.outputs.aiSearchConnection
-//     #disable-next-line BCP318
-//     azureStorageConnection: foundryProject.outputs.azureStorageConnection
-//     #disable-next-line BCP318
-//     cosmosDBConnection: foundryProject.outputs.cosmosDBConnection
-//     projectCapHost: projectCapHost
-//     #disable-next-line BCP318
-//     projectName: foundryProject.outputs.projectName
-//   }
-// }
-
-// The Storage Blob Data Owner role must be assigned after the caphost is created
-// module rbacProjectStoragePostDeploy 'modules/ai/rbac/blob-storage-container-role-assignments.bicep' = if (deployFoundry && !useAzureManagedResource) {
-//   scope: rg
-//   params: {
-//     #disable-next-line BCP318
-//     aiProjectPrincipalId: foundryProject.outputs.projectPrincipalId
-//     #disable-next-line BCP318
-//     storageName: foundryDependencies.outputs.azureStorageName
-//     #disable-next-line BCP318
-//     workspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
-//   }
-//   dependsOn: [
-//     projectCapabilityHost
-//   ]
-// }
-
-// // The Cosmos Built-In Data Contributor role must be assigned after the caphost is created
-// module rbacCosmosDBPostDeploy 'modules/ai/rbac/cosmos-container-role-assignments.bicep' = if (deployFoundry && !useAzureManagedResource) {
-//   scope: rg
-//   params: {
-//     #disable-next-line BCP318
-//     cosmosAccountName: foundryDependencies.outputs.cosmosDBName
-//     #disable-next-line BCP318
-//     projectPrincipalId: foundryProject.outputs.projectPrincipalId
-//     #disable-next-line BCP318
-//     projectWorkspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
-//   }
-//   dependsOn: [
-//     projectCapabilityHost
-//   ]
-// }
-
 /*  Workload Specific and Agents */
 
 /* Separate AI Search Instance for Foundry IQ */
@@ -274,3 +222,8 @@ output azureFoundryProjectResourceId string = foundryProject.outputs.projectId
 output aiSearchConnection string = foundryProject.outputs.aiSearchConnection
 output azureStorageConnection string = foundryProject.outputs.azureStorageConnection
 output cosmosDBConnection string = foundryProject.outputs.cosmosDBConnection
+output projectWorkspaceId string = foundryProject.outputs.projectWorkspaceId
+output aiSearchResourceName string = foundryDependencies.outputs.aiSearchName
+output azureStorageResourceName string = foundryDependencies.outputs.azureStorageName
+output cosmosDBResourceName string = foundryDependencies.outputs.cosmosDBName
+output resourceGroupName string = rg.name
