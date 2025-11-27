@@ -43,7 +43,7 @@ resource cosmosDB 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' = {
     enablePerRegionPerPartitionAutoscale: true
     enableBurstCapacity: false
     enablePriorityBasedExecution: false
-    defaultPriorityLevel: 'High'
+    //defaultPriorityLevel: 'High'
     minimalTlsVersion: 'Tls12'
     consistencyPolicy: {
       defaultConsistencyLevel: 'Session'
