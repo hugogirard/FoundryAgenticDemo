@@ -1,0 +1,81 @@
+name: Create Azure Resources
+
+on:
+    push:
+        paths:
+            - "infra/*.bicep"
+            - ".github/workflows/infra.yml"
+    workflow_dispatch:
+
+jobs:
+    create-azure-resources:
+        env:
+            REGION: "westus" # You can change this to reflect the region where you deploy your Accelerator
+            AZURE_CORE_OUTPUT: "none" # Test
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Azure Login
+              uses: Azure/login@v2
+              with:
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+            # Temp fix
+            - name: bicep tmp fix
+              run: az config set bicep.use_binary_from_path=false
+
+            - name: deploy
+              id: createResources
+              uses: azure/arm-deploy@v2
+              with:
+                  subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+                  scope: subscription
+                  region: ${{ env.REGION }}
+                  deploymentName: ${{ github.run_id }}
+                  template: ./infra/foundry.bicep
+                  parameters: ./infra/foundry.bicepparam
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AZURE_FOUNDRY_RESOURCE_NAME
+                  value: ${{ steps.createResources.outputs.azureFoundryResourceName }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AZURE_FOUNDRY_RESOURCE_ID
+                  value: ${{ steps.createResources.outputs.azureFoundryResourceId }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AZURE_FOUNDRY_PROJECT_RESOURCE_NAME
+                  value: ${{ steps.createResources.outputs.azureFoundryProjectResourceName }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AZURE_FOUNDRY_PROJECT_RESOURCE_ID
+                  value: ${{ steps.createResources.outputs.azureFoundryProjectResourceId }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AI_SEARCH_CONNECTION
+                  value: ${{ steps.createResources.outputs.aiSearchConnection }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AZURE_STORAGE_CONNECTION
+                  value: ${{ steps.createResources.outputs.azureStorageConnection }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: COSMOSDB_CONNECTION
+                  value: ${{ steps.createResources.outputs.cosmosDBConnection }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
