@@ -1,0 +1,32 @@
+name: Create Capability Host
+
+on:
+    workflow_dispatch:
+
+jobs:
+    create-azure-resources:
+        env:
+            REGION: "westus" # You can change this to reflect the region where you deploy your Accelerator
+            AZURE_CORE_OUTPUT: "none" # Test
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Azure Login
+              uses: Azure/login@v2
+              with:
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+            # Temp fix
+            - name: bicep tmp fix
+              run: az config set bicep.use_binary_from_path=false
+
+            - uses: azure/arm-deploy@v2
+              with:
+                  scope: resourcegroup
+                  resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+                  deploymentName: ${{ github.run_id }}
+                  template: ./infra/workload.bicep
+                  parameters: location = 'westus'resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}
