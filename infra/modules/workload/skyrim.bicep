@@ -139,54 +139,54 @@ resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2025-11-01-previ
   }
 }
 
-// resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2025-11-01-preview' = {
-//   parent: db
-//   name: 'crime'
-//   properties: {
-//     resource: {
-//       id: 'crime'
-//       partitionKey: {
-//         paths: [
-//           '/crimeType'
-//         ]
-//         kind: 'Hash'
-//       }
-//       vectorEmbeddingPolicy: {
-//         vectorEmbeddings: [
-//           {
-//             dataType: 'float32'
-//             dimensions: 1536
-//             distanceFunction: 'cosine'
-//             path: '/descriptionVector'
-//           }
-//         ]
-//       }
-//       fullTextPolicy: {
-//         defaultLanguage: 'en-US'
-//         fullTextPaths: [
-//           {
-//             language: 'en-US'
-//             path: '/crimeName'
-//           }
-//           {
-//             language: 'en-US'
-//             path: '/description'
-//           }
-//         ]
-//       }
-//       indexingPolicy: {
-//         fullTextIndexes: [
-//           {
-//             path: '/description'
-//           }
-//           {
-//             path: '/crimeName'
-//           }
-//         ]
-//       }
-//     }
-//   }
-// }
+resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2025-11-01-preview' = {
+  parent: db
+  name: 'crime'
+  properties: {
+    resource: {
+      id: 'crime'
+      partitionKey: {
+        paths: [
+          '/crimeType'
+        ]
+        kind: 'Hash'
+      }
+      vectorEmbeddingPolicy: {
+        vectorEmbeddings: [
+          {
+            dataType: 'float32'
+            dimensions: 1536
+            distanceFunction: 'cosine'
+            path: '/descriptionVector'
+          }
+        ]
+      }
+      fullTextPolicy: {
+        defaultLanguage: 'en-US'
+        fullTextPaths: [
+          {
+            language: 'en-US'
+            path: '/crimeName'
+          }
+          {
+            language: 'en-US'
+            path: '/description'
+          }
+        ]
+      }
+      indexingPolicy: {
+        fullTextIndexes: [
+          {
+            path: '/description'
+          }
+          {
+            path: '/crimeName'
+          }
+        ]
+      }
+    }
+  }
+}
 
 resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageResourceName
@@ -208,15 +208,15 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
 }
 
-// module function '../serverless/function.bicep' = {
-//   params: {
-//     location: location
-//     appServicePlanName: appServicePlanName
-//     storageName: storageFunctionResourceName
-//     functionResourceName: functionResourceName
-//     cosmosDBResourceName: cosmosDB.name
-//     tags: tags
-//   }
-// }
+module function '../serverless/function.bicep' = {
+  params: {
+    location: location
+    appServicePlanName: appServicePlanName
+    storageName: storageFunctionResourceName
+    functionResourceName: functionResourceName
+    cosmosDBResourceName: cosmosDB.name
+    tags: tags
+  }
+}
 
 //output functionCrimeResourceName string = function.outputs.functionResourceName
