@@ -8,5 +8,8 @@ namespace Crime.Repositories;
 
 public interface ICrimeRepository
 {
-    Task<IEnumerable<Models.Crime>> GetCrimesAsync(string city, string description);
+    Task<IEnumerable<Models.Crime>> GetCrimesAsync(string crimeType, 
+                                                   string crimeName, 
+                                                   string city, 
+                                                   string description);
 }

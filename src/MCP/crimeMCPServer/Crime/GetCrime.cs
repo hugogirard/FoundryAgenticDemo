@@ -22,25 +22,28 @@ public class CrimeResearcher
     }
 
     [Function(name: "getCrime")]
-    public async Task<IEnumerable<Models.Crime>> Run([McpToolTrigger("getCrime","Get list of crimes in Skyrim")] ToolInvocationContext context,
-                                                     [McpToolProperty("city", "The city where the crime is committed.", isRequired: false)]string city,
-                                                     [McpToolProperty("description", "The description of the crime", isRequired: false)] string description) 
+    public async Task<IEnumerable<Models.Crime>> Run([McpToolTrigger("getCrime", "Get list of crimes in Skyrim")] ToolInvocationContext context,
+                                                     [McpToolProperty("crimeType", "The type of crime committed.", isRequired: false)] string crimeType,
+                                                     [McpToolProperty("crimeName", "The crime name committed.", isRequired: false)] string crimeName,
+                                                     [McpToolProperty("city", "The city where the crime is committed.", isRequired: false)] string city,
+                                                     [McpToolProperty("description", "The description of the crime", isRequired: false)] string description)
     {
         try
         {
-            if (string.IsNullOrEmpty(city) && string.IsNullOrEmpty(description)) 
+            if (string.IsNullOrEmpty(crimeType) && string.IsNullOrEmpty(crimeName) && string.IsNullOrEmpty(city) && string.IsNullOrEmpty(description))
             {
-                throw new Exception("No city or description of crime were passed in parameters");
+                throw new Exception("No parameters was passed");
             }
 
-            var crimes = await _crimeRepository.GetCrimesAsync(city, description);
+            var crimes = await _crimeRepository.GetCrimesAsync(crimeType, crimeName, city, description);
             return crimes;
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
-            //_logger.LogError(ex.Message, ex);
-            //throw new Exception("An error occurred while retrieving crimes.");            
+            {
+                _logger.LogError(ex.Message, ex);
+                throw new Exception("An error occurred while retrieving crimes.");
+            }
         }
     }
 }
