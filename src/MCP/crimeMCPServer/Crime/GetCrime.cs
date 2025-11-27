@@ -40,10 +40,10 @@ public class CrimeResearcher
         }
         catch (Exception ex)
         {
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new Exception("An error occurred while retrieving crimes.");
-            }
+            
+            _logger.LogError(ex.Message);
+            throw new Exception("An error occurred while retrieving crimes.");
+            
         }
     }
 }

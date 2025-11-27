@@ -4,9 +4,10 @@ namespace Crime.Models;
 
 public record Crime(
     string id,
-    string crime_name,
+    string crimeName,
+    string crimeType,
     string city,
-    string suspect_name,
+    string suspectName,
     string reward,
     string description
 );

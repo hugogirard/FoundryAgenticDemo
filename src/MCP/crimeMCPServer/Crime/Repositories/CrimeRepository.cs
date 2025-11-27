@@ -42,39 +42,42 @@ public class CrimeRepository : ICrimeRepository
         
         var selectStmt = new StringBuilder();
         var parameters = new Dictionary<string, string>();
+        bool hasCondition = false;
 
         selectStmt.Append("SELECT * FROM c WHERE");
 
         if (!string.IsNullOrEmpty(crimeType)) 
         {
             selectStmt.Append(" c.crimeType = @crimeType");
-            selectStmt.Append(" AND ");
             parameters.Add("@crimeType", crimeType);
+            hasCondition = true;
         }
 
         if (!string.IsNullOrEmpty(crimeName)) 
         {
+            if (hasCondition) selectStmt.Append(" AND ");
             selectStmt.Append(" FullTextContains(c.crimeName, @crimeName) ");
-            selectStmt.Append(" AND ");
             parameters.Add("@crimeName", crimeName);
+            hasCondition = true;
         }
 
         if (!string.IsNullOrEmpty(city)) 
         {
+            if (hasCondition) selectStmt.Append(" AND ");
             selectStmt.Append(" c.city = @city");
-            selectStmt.Append(" AND ");
             parameters.Add("@city", city);
+            hasCondition = true;
         }
 
         if (!string.IsNullOrEmpty(description))
         {
+            if (hasCondition) selectStmt.Append(" AND ");
             selectStmt.Append(" FullTextContains(c.description, @description) ");
-            selectStmt.Append(" AND ");
             parameters.Add("@description", description);
         }
 
         // Delete the last AND clause
-        selectStmt.Remove(selectStmt.Length - 1, 1);
+        //selectStmt = selectStmt.Remove(selectStmt.Length - 1, 1);
         query = new QueryDefinition(selectStmt.ToString());
 
         foreach (var p in parameters) 
