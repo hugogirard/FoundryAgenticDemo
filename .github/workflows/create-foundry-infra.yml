@@ -1,10 +1,6 @@
 name: Create Azure Resources
 
 on:
-    push:
-        paths:
-            - "infra/*.bicep"
-            - ".github/workflows/infra.yml"
     workflow_dispatch:
 
 jobs:
@@ -37,6 +33,12 @@ jobs:
                   deploymentName: ${{ github.run_id }}
                   template: ./infra/foundry.bicep
                   parameters: ./infra/foundry.bicepparam
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: RESOURCE_GROUP_NAME
+                  value: ${{ steps.createResources.outputs.resourceGroupName }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
 
             - uses: gliech/create-github-secret-action@v1
               with:
@@ -78,4 +80,28 @@ jobs:
               with:
                   name: COSMOSDB_CONNECTION
                   value: ${{ steps.createResources.outputs.cosmosDBConnection }}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: PROJECT_WORKSPACE_ID
+                  value: ${{ steps.createResources.outputs.projectWorkspaceId}}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AI_SEARCH_RESOURCE_NAME
+                  value: ${{ steps.createResources.outputs.aiSearchResourceName}}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: AZURE_STORAGE_RESOURCENAME
+                  value: ${{ steps.createResources.outputs.azureStorageResourceName}}
+                  pa_token: ${{ secrets.PA_TOKEN }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: COSMOSDB_RESOURCE_NAME
+                  value: ${{ steps.createResources.outputs.cosmosDBResourceName}}
                   pa_token: ${{ secrets.PA_TOKEN }}
