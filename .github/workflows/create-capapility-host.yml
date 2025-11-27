@@ -28,7 +28,7 @@ jobs:
               with:
                   tokenPrefix: __
                   tokenSuffix: __
-                  files: '["bicep/host.bicepparam"]'
+                  files: '["infra/host.bicepparam"]'
               env:
                   aiSearchConnectionResourceName: ${{ secrets.AI_SEARCH_CONNECTION }}
                   azureStorageConnectionResourceName: ${{ secrets.AZURE_STORAGE_CONNECTION }}
