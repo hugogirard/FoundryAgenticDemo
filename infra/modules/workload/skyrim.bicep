@@ -4,6 +4,8 @@ param storageResourceName string
 param appServicePlanName string
 param storageFunctionResourceName string
 param functionResourceName string
+param logAnalyticResourceName string
+param applicationInsightResourceName string
 
 var tags = {
   SecurityControl: 'Ignore'
@@ -82,48 +84,6 @@ resource cosmosDB 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' = {
   }
 }
 
-// resource cosmosDB 'Microsoft.DocumentDB/databaseAccounts@2025-05-01-preview' = {
-//   name: cosmosDBResourceName
-//   location: location
-//   kind: 'GlobalDocumentDB'
-//   tags: tags
-//   properties: {
-//     consistencyPolicy: {
-//       defaultConsistencyLevel: 'Session'
-//     }
-//     capabilities: [
-//       {
-//         name: 'EnableNoSQLVectorSearch'
-//       }
-//     ]
-//     disableLocalAuth: false
-//     enableAutomaticFailover: true
-//     enableMultipleWriteLocations: false
-//     publicNetworkAccess: 'Enabled'
-//     enableFreeTier: false
-//     enableAnalyticalStorage: false
-//     backupPolicy: {
-//       type: 'Periodic'
-//       periodicModeProperties: {
-//         backupIntervalInMinutes: 240
-//         backupRetentionIntervalInHours: 8
-//         backupStorageRedundancy: 'Geo'
-//       }
-//     }
-//     locations: [
-//       {
-//         locationName: location
-//         failoverPriority: 0
-//         isZoneRedundant: false
-//       }
-//     ]
-//     databaseAccountOfferType: 'Standard'
-//     capacity: {
-//       totalThroughputLimit: 1000
-//     }
-//   }
-// }
-
 resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2025-11-01-preview' = {
   parent: cosmosDB
   name: 'skyrim'
@@ -131,11 +91,6 @@ resource db 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2025-11-01-previ
     resource: {
       id: 'skyrim'
     }
-    // options: {
-    //   autoscaleSettings: {
-    //     maxThroughput: 4000
-    //   }
-    // }
   }
 }
 
@@ -215,6 +170,8 @@ module function '../serverless/function.bicep' = {
     storageName: storageFunctionResourceName
     functionResourceName: functionResourceName
     cosmosDBResourceName: cosmosDB.name
+    logAnalyticResourceName: logAnalyticResourceName
+    applicationInsightResourceName: applicationInsightResourceName
     tags: tags
   }
 }

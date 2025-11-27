@@ -3,10 +3,29 @@ param appServicePlanName string
 param storageName string
 param functionResourceName string
 param cosmosDBResourceName string
+param logAnalyticResourceName string
+param applicationInsightResourceName string
 param tags object
 
 resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2025-11-01-preview' existing = {
   name: cosmosDBResourceName
+}
+
+module loganalytics 'br/public:avm/res/operational-insights/workspace:0.11.1' = {
+  params: {
+    name: logAnalyticResourceName
+    location: location
+    dailyQuotaGb: 1
+    dataRetention: 2
+  }
+}
+
+module appinsights 'br/public:avm/res/insights/component:0.6.0' = {
+  params: {
+    name: applicationInsightResourceName
+    workspaceResourceId: loganalytics.outputs.resourceId
+    location: location
+  }
 }
 
 resource asp 'Microsoft.Web/serverfarms@2025-03-01' = {
