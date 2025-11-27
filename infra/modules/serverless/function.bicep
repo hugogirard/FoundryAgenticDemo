@@ -11,21 +11,19 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2025-11-01-preview' exist
   name: cosmosDBResourceName
 }
 
-module loganalytics 'br/public:avm/res/operational-insights/workspace:0.11.1' = {
-  params: {
-    name: logAnalyticResourceName
-    location: location
-    dailyQuotaGb: 1
-    dataRetention: 2
-    skuName: 'PerGB2018'
-  }
+resource loganalytics 'Microsoft.OperationalInsights/workspaces@2025-07-01' = {
+  name: logAnalyticResourceName
+  location: location
+  properties: {}
 }
 
-module appinsights 'br/public:avm/res/insights/component:0.6.0' = {
-  params: {
-    name: applicationInsightResourceName
-    workspaceResourceId: loganalytics.outputs.resourceId
-    location: location
+resource appinsight 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightResourceName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: loganalytics.id
   }
 }
 
