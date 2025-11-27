@@ -42,6 +42,7 @@ jobs:
 
             - uses: azure/arm-deploy@v2
               with:
+                  scope: resourcegroup
                   resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
                   deploymentName: ${{ github.run_id }}
                   template: ./infra/host.bicep
