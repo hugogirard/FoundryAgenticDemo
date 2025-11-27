@@ -28,5 +28,5 @@ jobs:
                   scope: resourcegroup
                   resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
                   deploymentName: ${{ github.run_id }}
-                  template: ./infra/workload.bicep
+                  template: ./infra/workloads.bicep
                   parameters: location = 'westus'resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}
