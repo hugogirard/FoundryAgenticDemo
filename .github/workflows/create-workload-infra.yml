@@ -24,9 +24,16 @@ jobs:
               run: az config set bicep.use_binary_from_path=false
 
             - uses: azure/arm-deploy@v2
+              id: createResources
               with:
                   scope: resourcegroup
                   resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
                   deploymentName: ${{ github.run_id }}
                   template: ./infra/workloads.bicep
                   parameters: location=${{ env.REGION }} resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}
+
+            - uses: gliech/create-github-secret-action@v1
+              with:
+                  name: FUNCTION_CRIMERE_SOURCENAME
+                  value: ${{ steps.createResources.outputs.functionCrimeResourceName}}
+                  pa_token: ${{ secrets.PA_TOKEN }}

@@ -219,4 +219,4 @@ module function '../serverless/function.bicep' = {
   }
 }
 
-//output functionCrimeResourceName string = function.outputs.functionResourceName
+output functionCrimeResourceName string = function.outputs.functionResourceName
