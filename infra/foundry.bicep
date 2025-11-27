@@ -100,6 +100,7 @@ module embeddingnModel 'modules/ai/model-deployment.bicep' = {
   }
   dependsOn: [
     foundryProject
+    chatCompletionModel
   ]
 }
 
@@ -137,7 +138,6 @@ module foundryProject 'modules/ai/project.bicep' = {
     displayName: 'skyrim'
     projectDescription: 'crime tracking in Skyrim'
     projectName: 'skyrim'
-    useAzureManagedResource: true
   }
 }
 
