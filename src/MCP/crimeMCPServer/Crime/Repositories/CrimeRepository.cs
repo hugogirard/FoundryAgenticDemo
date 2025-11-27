@@ -52,4 +52,9 @@ public class CrimeRepository : ICrimeRepository
 
         return crimes;
     }
+
+    private string CreateQuery() 
+    {
+        return string.Empty;
+    }
 }
