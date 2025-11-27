@@ -23,13 +23,26 @@ jobs:
             - name: bicep tmp fix
               run: az config set bicep.use_binary_from_path=false
 
-            - name: deploy
-              id: createResources
-              uses: azure/arm-deploy@v2
+            - name: Replace tokens
+              uses: cschleiden/replace-tokens@v1.0
               with:
-                  subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-                  scope: subscription
-                  region: ${{ env.REGION }}
+                  tokenPrefix: __
+                  tokenSuffix: __
+                  files: '["bicep/host.bicepparam"]'
+              env:
+                  aiSearchConnectionResourceName: ${{ secrets.AI_SEARCH_CONNECTION }}
+                  azureStorageConnectionResourceName: ${{ secrets.AZURE_STORAGE_CONNECTION }}
+                  azureStorageResourceName: ${{ secrets.AZURE_STORAGE_RESOURCENAME }}
+                  cosmosDBConnectionResourceName: ${{ secrets.COSMOSDB_CONNECTION }}
+                  cosmosDBNameResourceName: ${{ secrets.COSMOSDB_RESOURCE_NAME }}
+                  foundryResourceName: ${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }}
+                  projectNameResourceName: ${{ secrets.AZURE_FOUNDRY_PROJECT_RESOURCE_NAME }}
+                  projectWorkspaceId: ${{ secrets.PROJECT_WORKSPACE_ID }}
+                  resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+
+            - uses: azure/arm-deploy@v2
+              with:
+                  resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
                   deploymentName: ${{ github.run_id }}
-                  template: ./infra/foundry.bicep
-                  parameters: ./infra/foundry.bicepparam
+                  template: ./infra/host.bicep
+                  parameters: ./infra/host.bicepparam
