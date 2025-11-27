@@ -24,8 +24,8 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     storageResourceName: 'strk${replace(resourceToken,'-','')}'
     appServicePlanName: '${abbrs.webServerFarms}func-${resourceToken}'
     storageFunctionResourceName: 'strf${replace(resourceToken,'-','')}'
-    functionResourceName: '${abbrs.webSitesFunctions}crime'
+    functionResourceName: '${abbrs.webSitesFunctions}crime-${resourceToken}'
   }
 }
 
-//output functionCrimeResourceName string = skyrimWorkload.outputs.functionCrimeResourceName
+output functionCrimeResourceName string = skyrimWorkload.outputs.functionCrimeResourceName
