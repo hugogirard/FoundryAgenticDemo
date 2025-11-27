@@ -11,7 +11,7 @@ jobs:
     create-azure-resources:
         env:
             REGION: "westus" # You can change this to reflect the region where you deploy your Accelerator
-            AZURE_CORE_OUTPUT: "none"
+            AZURE_CORE_OUTPUT: "none" # Test
 
         runs-on: ubuntu-latest
 
