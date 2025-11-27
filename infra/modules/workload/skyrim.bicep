@@ -1,6 +1,9 @@
 param location string
 param cosmosDBResourceName string
 param storageResourceName string
+param appServicePlanName string
+param storageFunctionResourceName string
+param functionResourceName string
 
 var tags = {
   SecurityControl: 'Ignore'
@@ -198,3 +201,16 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
     allowSharedKeyAccess: true
   }
 }
+
+module function '../serverless/function.bicep' = {
+  params: {
+    location: location
+    appServicePlanName: appServicePlanName
+    storageName: storageFunctionResourceName
+    functionResourceName: functionResourceName
+    cosmosDBResourceName: cosmosDB.name
+    tags: tags
+  }
+}
+
+output functionCrimeResourceName string = function.outputs.functionResourceName

@@ -285,5 +285,10 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     location: location
     cosmosDBResourceName: '${abbrs.documentDBDatabaseAccounts}elder-${resourceToken}'
     storageResourceName: 'strk${replace(resourceToken,'-','')}'
+    appServicePlanName: '${abbrs.webServerFarms}func-${resourceToken}'
+    storageFunctionResourceName: 'strf${replace(resourceToken,'-','')}'
+    functionResourceName: '${abbrs.webSitesFunctions}crime'
   }
 }
+
+output functionCrimeResourceName string = skyrimWorkload.outputs.functionCrimeResourceName
