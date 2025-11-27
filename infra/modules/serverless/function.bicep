@@ -17,6 +17,7 @@ module loganalytics 'br/public:avm/res/operational-insights/workspace:0.11.1' = 
     location: location
     dailyQuotaGb: 1
     dataRetention: 2
+    skuName: 'PerGB2018'
   }
 }
 
