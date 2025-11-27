@@ -141,15 +141,6 @@ module foundryProject 'modules/ai/project.bicep' = {
   }
 }
 
-// module formatProjectWorkspaceId 'modules/ai/format-project-workspace-id.bicep' = if (deployFoundry && !useAzureManagedResource) {
-//   scope: rg
-//   name: 'format-project-workspace-id-${resourceToken}-deployment'
-//   params: {
-//     #disable-next-line BCP318
-//     projectWorkspaceId: foundryProject.outputs.projectWorkspaceId
-//   }
-// }
-
 /*
   Assigns the project SMI the storage blob data contributor role on the storage account
   for the AI Project
@@ -189,36 +180,11 @@ module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = {
   }
 }
 
-/*  Workload Specific and Agents */
-
-/* Separate AI Search Instance for Foundry IQ */
-// module foundryIQSearch 'modules/ai/IQ/search.bicep' = {
-//   scope: rg
-//   params: {
-//     location: location
-//     aiSearchName: '${abbrs.searchSearchServices}foundryiq-${resourceToken}'
-//   }
-// }
-
-/* Create all resources for the agents needed for Skyrim crimes */
-// module skyrimWorkload 'modules/workload/skyrim.bicep' = {
-//   scope: rg
-//   params: {
-//     location: location
-//     cosmosDBResourceName: '${abbrs.documentDBDatabaseAccounts}elder-${resourceToken}'
-//     storageResourceName: 'strk${replace(resourceToken,'-','')}'
-//     appServicePlanName: '${abbrs.webServerFarms}func-${resourceToken}'
-//     storageFunctionResourceName: 'strf${replace(resourceToken,'-','')}'
-//     functionResourceName: '${abbrs.webSitesFunctions}crime'
-//   }
-// }
-
-// output functionCrimeResourceName string = skyrimWorkload.outputs.functionCrimeResourceName
-
 output azureFoundryResourceName string = foundry.outputs.accountName
 output azureFoundryResourceId string = foundry.outputs.accountID
 output azureFoundryProjectResourceName string = foundryProject.outputs.projectName
 output azureFoundryProjectResourceId string = foundryProject.outputs.projectId
+output foundryProjectProjectPrincipalId string = foundryProject.outputs.projectPrincipalId
 output aiSearchConnection string = foundryProject.outputs.aiSearchConnection
 output azureStorageConnection string = foundryProject.outputs.azureStorageConnection
 output cosmosDBConnection string = foundryProject.outputs.cosmosDBConnection

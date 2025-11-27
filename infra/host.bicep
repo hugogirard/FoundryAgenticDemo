@@ -35,9 +35,8 @@ param azureStorageResourceName string
 @description('The Azure project name in Azure AI Foundry')
 param cosmosDBNameResourceName string
 
-resource foundryProject 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' existing = {
-  name: projectNameResourceName
-}
+@description('Azure Foundry Project PrincipalID')
+param foundryProjectprincipalId string
 
 #disable-next-line no-unused-vars
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
@@ -65,7 +64,7 @@ module projectCapabilityHost 'modules/ai/add-project-capability-host.bicep' = {
 // The Storage Blob Data Owner role must be assigned after the caphost is created
 module rbacProjectStoragePostDeploy 'modules/ai/rbac/blob-storage-container-role-assignments.bicep' = {
   params: {
-    aiProjectPrincipalId: foundryProject.identity.principalId
+    aiProjectPrincipalId: foundryProjectprincipalId
     storageName: azureStorageResourceName
     workspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
   }
@@ -78,7 +77,7 @@ module rbacProjectStoragePostDeploy 'modules/ai/rbac/blob-storage-container-role
 module rbacCosmosDBPostDeploy 'modules/ai/rbac/cosmos-container-role-assignments.bicep' = {
   params: {
     cosmosAccountName: cosmosDBNameResourceName
-    projectPrincipalId: foundryProject.identity.principalId
+    projectPrincipalId: foundryProjectprincipalId
     projectWorkspaceId: formatProjectWorkspaceId.outputs.projectWorkspaceIdGuid
   }
   dependsOn: [
