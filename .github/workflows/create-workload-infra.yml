@@ -1,4 +1,4 @@
-name: Create Capability Host
+name: Create Workload Infrastructure
 
 on:
     workflow_dispatch:
