@@ -29,4 +29,4 @@ jobs:
                   resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
                   deploymentName: ${{ github.run_id }}
                   template: ./infra/workloads.bicep
-                  parameters: location = 'westus' resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}
+                  parameters: location='westus' resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}
