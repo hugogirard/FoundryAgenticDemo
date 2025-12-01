@@ -1,0 +1,555 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accounts_foundry_wuhe7erk5jhnm_name": {
+            "defaultValue": "foundry-wuhe7erk5jhnm",
+            "type": "String"
+        },
+        "virtualNetworks_vnet_agent_externalid": {
+            "defaultValue": "/subscriptions/6e37307e-394c-478a-8404-4e441b3dfc1d/resourceGroups/rg-skyrim-world/providers/Microsoft.Network/virtualNetworks/vnet-agent",
+            "type": "String"
+        },
+        "databaseAccounts_cosmos_wuhe7erk5jhnm_externalid": {
+            "defaultValue": "/subscriptions/6e37307e-394c-478a-8404-4e441b3dfc1d/resourceGroups/rg-skyrim-world/providers/Microsoft.DocumentDB/databaseAccounts/cosmos-wuhe7erk5jhnm",
+            "type": "String"
+        },
+        "searchServices_srch_wuhe7erk5jhnm_externalid": {
+            "defaultValue": "/subscriptions/6e37307e-394c-478a-8404-4e441b3dfc1d/resourceGroups/rg-skyrim-world/providers/Microsoft.Search/searchServices/srch-wuhe7erk5jhnm",
+            "type": "String"
+        },
+        "storageAccounts_strfwuhe7erk5jhnm_externalid": {
+            "defaultValue": "/subscriptions/6e37307e-394c-478a-8404-4e441b3dfc1d/resourceGroups/rg-skyrim-world/providers/Microsoft.Storage/storageAccounts/strfwuhe7erk5jhnm",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2025-06-01",
+            "name": "[parameters('accounts_foundry_wuhe7erk5jhnm_name')]",
+            "location": "westus",
+            "sku": {
+                "name": "S0"
+            },
+            "kind": "AIServices",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "apiProperties": {},
+                "customSubDomainName": "[parameters('accounts_foundry_wuhe7erk5jhnm_name')]",
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Allow",
+                    "virtualNetworkRules": [],
+                    "ipRules": []
+                },
+                "networkInjections": [
+                    {
+                        "scenario": "agent",
+                        "subnetArmId": "[concat(parameters('virtualNetworks_vnet_agent_externalid'), '/subnets/agent-subnet')]",
+                        "useMicrosoftManagedNetwork": false
+                    }
+                ],
+                "allowProjectManagement": true,
+                "defaultProject": "skyrim",
+                "associatedProjects": [
+                    "skyrim"
+                ],
+                "publicNetworkAccess": "Enabled",
+                "disableLocalAuth": false
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/capabilityHosts",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/', parameters('accounts_foundry_wuhe7erk5jhnm_name'), '@aml_aiagentservice')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "customerSubnet": "[concat(parameters('virtualNetworks_vnet_agent_externalid'), '/subnets/agent-subnet')]",
+                "capabilityHostKind": "Agents"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/cosmos-wuhe7erk5jhnm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "AAD",
+                "category": "CosmosDb",
+                "target": "https://cosmos-wuhe7erk5jhnm.documents.azure.com:443/",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "ApiType": "Azure",
+                    "ResourceId": "[parameters('databaseAccounts_cosmos_wuhe7erk5jhnm_externalid')]",
+                    "location": "West US"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/MCPSkyrimCrime')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "CustomKeys",
+                "category": "RemoteTool",
+                "target": "https://func-crime-wuhe7erk5jhnm-gkbcgfbgaff5dqce.westus-01.azurewebsites.net/runtime/webhooks/mcp",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "type": "custom_MCP"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/srch-wuhe7erk5jhnm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "AAD",
+                "category": "CognitiveSearch",
+                "target": "https://srch-wuhe7erk5jhnm.search.windows.net",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "ApiType": "Azure",
+                    "ResourceId": "[parameters('searchServices_srch_wuhe7erk5jhnm_externalid')]",
+                    "location": "West US",
+                    "ApiVersion": "2024-05-01-preview",
+                    "DeploymentApiVersion": "2023-11-01"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/strfwuhe7erk5jhnm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "AAD",
+                "category": "AzureStorageAccount",
+                "target": "https://strfwuhe7erk5jhnm.blob.core.windows.net/",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "ApiType": "Azure",
+                    "ResourceId": "[parameters('storageAccounts_strfwuhe7erk5jhnm_externalid')]",
+                    "location": "westus"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/defenderForAISettings",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/gpt-4.1-mini')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "sku": {
+                "name": "GlobalStandard",
+                "capacity": 2375
+            },
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "gpt-4.1-mini",
+                    "version": "2025-04-14"
+                },
+                "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
+                "currentCapacity": 2375
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/text-embedding-3-large')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "sku": {
+                "name": "GlobalStandard",
+                "capacity": 150
+            },
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "text-embedding-3-large",
+                    "version": "1"
+                },
+                "versionUpgradeOption": "NoAutoUpgrade",
+                "currentCapacity": 150
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/text-embedding-3-small')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "sku": {
+                "name": "Standard",
+                "capacity": 120
+            },
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "text-embedding-3-small",
+                    "version": "1"
+                },
+                "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
+                "currentCapacity": 120,
+                "raiPolicyName": "Microsoft.DefaultV2"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/privateEndpointConnections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/', parameters('accounts_foundry_wuhe7erk5jhnm_name'), '-private-endpoint.59911d11-95a7-4475-a5d9-049abf45c53a')]",
+            "location": "westus",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "privateEndpoint": {},
+                "groupIds": [
+                    "account"
+                ],
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "description": "Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/skyrim')]",
+            "location": "westus",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "kind": "AIServices",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "description": "crime tracking in Skyrim",
+                "displayName": "skyrim"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/raiPolicies",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/Microsoft.Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "mode": "Blocking",
+                "contentFilters": [
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/raiPolicies",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/Microsoft.DefaultV2')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "mode": "Blocking",
+                "contentFilters": [
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Jailbreak",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Protected Material Text",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Protected Material Code",
+                        "blocking": false,
+                        "enabled": true,
+                        "source": "Completion"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects/capabilityHosts",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/skyrim/skyrimcaphost')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('accounts_foundry_wuhe7erk5jhnm_name'), 'skyrim')]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "capabilityHostKind": "Agents",
+                "vectorStoreConnections": [
+                    "srch-wuhe7erk5jhnm"
+                ],
+                "storageConnections": [
+                    "strfwuhe7erk5jhnm"
+                ],
+                "threadStorageConnections": [
+                    "cosmos-wuhe7erk5jhnm"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/skyrim/cosmos-wuhe7erk5jhnm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('accounts_foundry_wuhe7erk5jhnm_name'), 'skyrim')]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "AAD",
+                "category": "CosmosDb",
+                "target": "https://cosmos-wuhe7erk5jhnm.documents.azure.com:443/",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "ApiType": "Azure",
+                    "ResourceId": "[parameters('databaseAccounts_cosmos_wuhe7erk5jhnm_externalid')]",
+                    "location": "West US"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/skyrim/MCPSkyrimCrime')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('accounts_foundry_wuhe7erk5jhnm_name'), 'skyrim')]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "CustomKeys",
+                "category": "RemoteTool",
+                "target": "https://func-crime-wuhe7erk5jhnm-gkbcgfbgaff5dqce.westus-01.azurewebsites.net/runtime/webhooks/mcp",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "type": "custom_MCP"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/skyrim/srch-wuhe7erk5jhnm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('accounts_foundry_wuhe7erk5jhnm_name'), 'skyrim')]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "AAD",
+                "category": "CognitiveSearch",
+                "target": "https://srch-wuhe7erk5jhnm.search.windows.net",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "ApiType": "Azure",
+                    "ResourceId": "[parameters('searchServices_srch_wuhe7erk5jhnm_externalid')]",
+                    "location": "West US",
+                    "ApiVersion": "2024-05-01-preview",
+                    "DeploymentApiVersion": "2023-11-01"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects/connections",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('accounts_foundry_wuhe7erk5jhnm_name'), '/skyrim/strfwuhe7erk5jhnm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts/projects', parameters('accounts_foundry_wuhe7erk5jhnm_name'), 'skyrim')]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_foundry_wuhe7erk5jhnm_name'))]"
+            ],
+            "properties": {
+                "authType": "AAD",
+                "category": "AzureStorageAccount",
+                "target": "https://strfwuhe7erk5jhnm.blob.core.windows.net/",
+                "useWorkspaceManagedIdentity": false,
+                "isSharedToAll": false,
+                "sharedUserList": [],
+                "peRequirement": "NotRequired",
+                "peStatus": "NotApplicable",
+                "metadata": {
+                    "ApiType": "Azure",
+                    "ResourceId": "[parameters('storageAccounts_strfwuhe7erk5jhnm_externalid')]",
+                    "location": "westus"
+                }
+            }
+        }
+    ]
+}
