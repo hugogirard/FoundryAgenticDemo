@@ -27,3 +27,5 @@ param embeddingModelSkuCapacity = 150
 param location = 'westus'
 
 param resourceGroupName = 'rg-skyrim-world'
+
+param useAzureManagedResources = true

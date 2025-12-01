@@ -2,7 +2,11 @@ name: Create Azure Resources
 
 on:
   workflow_dispatch:
-
+    inputs:
+      use-azure-managed-ressources:
+        type: boolean
+        description: Use Azure Managed resources for Foundry
+        default: true
 jobs:
   create-azure-resources:
     env:
@@ -32,7 +36,7 @@ jobs:
           region: ${{ env.REGION }}
           deploymentName: ${{ github.run_id }}
           template: ./infra/foundry.bicep
-          parameters: ./infra/foundry.bicepparam
+          parameters: ./infra/foundry.bicepparam useAzureManagedResources=${{ inputs.use-azure-managed-ressources }}
 
       - uses: gliech/create-github-secret-action@v1
         with:
