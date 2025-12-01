@@ -2,8 +2,14 @@ targetScope = 'resourceGroup'
 
 param location string
 param resourceGroupName string
+param foundryResourceName string
 
 var abbrs = loadJsonContent('./abbreviations.json')
+
+resource foundry 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' existing = {
+  name: foundryResourceName
+  scope: resourceGroup()
+}
 
 #disable-next-line no-unused-vars
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
@@ -27,6 +33,15 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     functionResourceName: '${abbrs.webSitesFunctions}crime-${resourceToken}'
     applicationInsightResourceName: '${abbrs.insightsComponents}${resourceToken}'
     logAnalyticResourceName: '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
+  }
+}
+
+module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = {
+  params: {
+    #disable-next-line BCP318
+    aiSearchName: foundryIQSearch.outputs.aiSearchResourceName
+    #disable-next-line BCP318
+    projectPrincipalId: foundry.identity.principalId
   }
 }
 

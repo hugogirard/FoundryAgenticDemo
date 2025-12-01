@@ -22,11 +22,11 @@ resource aiSearch 'Microsoft.Search/searchServices@2024-06-01-preview' = {
     partitionCount: 1
     publicNetworkAccess: 'enabled'
     replicaCount: 1
-    networkRuleSet: {
-      ipRules: []
-    }
   }
   sku: {
     name: 'standard'
   }
 }
+
+output aiSearchResourceId string = aiSearch.id
+output aiSearchResourceName string = aiSearch.name

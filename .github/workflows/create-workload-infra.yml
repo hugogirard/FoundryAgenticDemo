@@ -1,39 +1,39 @@
 name: Create Workload Infrastructure
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-    create-azure-resources:
-        env:
-            REGION: "westus" # You can change this to reflect the region where you deploy your Accelerator
-            AZURE_CORE_OUTPUT: "none" # Test
+  create-azure-resources:
+    env:
+      REGION: "westus" # You can change this to reflect the region where you deploy your Accelerator
+      AZURE_CORE_OUTPUT: "none" # Test
 
-        runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Azure Login
-              uses: Azure/login@v2
-              with:
-                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-            # Temp fix
-            - name: bicep tmp fix
-              run: az config set bicep.use_binary_from_path=false
+      # Temp fix
+      - name: bicep tmp fix
+        run: az config set bicep.use_binary_from_path=false
 
-            - uses: azure/arm-deploy@v2
-              id: createResources
-              with:
-                  scope: resourcegroup
-                  resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-                  deploymentName: ${{ github.run_id }}
-                  template: ./infra/workloads.bicep
-                  parameters: location=${{ env.REGION }} resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }}
+      - uses: azure/arm-deploy@v2
+        id: createResources
+        with:
+          scope: resourcegroup
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          deploymentName: ${{ github.run_id }}
+          template: ./infra/workloads.bicep
+          parameters: location=${{ env.REGION }} resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }} foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }}
 
-            - uses: gliech/create-github-secret-action@v1
-              with:
-                  name: FUNCTION_CRIMERE_SOURCENAME
-                  value: ${{ steps.createResources.outputs.functionCrimeResourceName}}
-                  pa_token: ${{ secrets.PA_TOKEN }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: FUNCTION_CRIMERE_SOURCENAME
+          value: ${{ steps.createResources.outputs.functionCrimeResourceName}}
+          pa_token: ${{ secrets.PA_TOKEN }}

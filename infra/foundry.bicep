@@ -34,6 +34,9 @@ param embeddingModelProperties object
 @description('The embedding model SKU capacity')
 param embeddingModelSkuCapacity int
 
+@description('Use Azure Managed Resources for Foundry')
+param useAzureManagedResources bool
+
 var abbrs = loadJsonContent('./abbreviations.json')
 
 // Generate a unique token to be used in naming resources.
@@ -54,7 +57,7 @@ module vnet 'modules/network/vnet.bicep' = {
   }
 }
 
-module foundryDependencies 'modules/ai/foundry.dependencies.bicep' = {
+module foundryDependencies 'modules/ai/foundry.dependencies.bicep' = if (!useAzureManagedResources) {
   scope: rg
   params: {
     location: location
@@ -84,7 +87,7 @@ module chatCompletionModel 'modules/ai/model-deployment.bicep' = {
     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
   }
   dependsOn: [
-    foundryProject
+    foundryProjectBYOResources
   ]
 }
 
@@ -99,13 +102,13 @@ module embeddingnModel 'modules/ai/model-deployment.bicep' = {
     versionUpgradeOption: 'NoAutoUpgrade'
   }
   dependsOn: [
-    foundryProject
+    foundryProjectBYOResources
     chatCompletionModel
   ]
 }
 
 // DNS And Private Endpoint
-module dnsPrivateEndpoint 'modules/network/private-endpoint-dns.bicep' = {
+module dnsPrivateEndpoint 'modules/network/private-endpoint-dns.bicep' = if (!useAzureManagedResources) {
   scope: rg
   params: {
     #disable-next-line BCP318
@@ -123,7 +126,7 @@ module dnsPrivateEndpoint 'modules/network/private-endpoint-dns.bicep' = {
 }
 
 // Now we create the AI Project
-module foundryProject 'modules/ai/project.bicep' = {
+module foundryProjectBYOResources 'modules/ai/project_byo_resources.bicep' = if (!useAzureManagedResources) {
   scope: rg
   params: {
     location: location
@@ -141,17 +144,28 @@ module foundryProject 'modules/ai/project.bicep' = {
   }
 }
 
+module foundryProjectManagedResources 'modules/ai/project_managed_resources.bicep' = {
+  scope: rg
+  params: {
+    location: location
+    accountName: foundry.outputs.accountName
+    displayName: 'skyrim'
+    projectDescription: 'crime tracking in Skyrim'
+    projectName: 'skyrim'
+  }
+}
+
 /*
   Assigns the project SMI the storage blob data contributor role on the storage account
   for the AI Project
 */
-module storageProjectRBAC 'modules/ai/rbac/azure-storage-account-role-assignment.bicep' = {
+module storageProjectRBAC 'modules/ai/rbac/azure-storage-account-role-assignment.bicep' = if (!useAzureManagedResources) {
   scope: rg
   params: {
     #disable-next-line BCP318
     azureStorageName: foundryDependencies.outputs.azureStorageName
     #disable-next-line BCP318
-    projectPrincipalId: foundryProject.outputs.projectPrincipalId
+    projectPrincipalId: foundryProjectBYOResources.outputs.projectPrincipalId
   }
   dependsOn: [
     dnsPrivateEndpoint
@@ -159,37 +173,54 @@ module storageProjectRBAC 'modules/ai/rbac/azure-storage-account-role-assignment
 }
 
 // The Comos DB Operator role must be assigned before the caphost is created
-module cosmosDBProjectRBAC 'modules/ai/rbac/cosmosdb-account-role-assignment.bicep' = {
+module cosmosDBProjectRBAC 'modules/ai/rbac/cosmosdb-account-role-assignment.bicep' = if (!useAzureManagedResources) {
   scope: rg
   params: {
     #disable-next-line BCP318
     cosmosDBName: foundryDependencies.outputs.cosmosDBName
     #disable-next-line BCP318
-    projectPrincipalId: foundryProject.outputs.projectPrincipalId
+    projectPrincipalId: foundryProjectBYOResources.outputs.projectPrincipalId
   }
 }
 
 // This role can be assigned before or after the caphost is created
-module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = {
+module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = if (!useAzureManagedResources) {
   scope: rg
   params: {
     #disable-next-line BCP318
     aiSearchName: foundryDependencies.outputs.aiSearchName
     #disable-next-line BCP318
-    projectPrincipalId: foundryProject.outputs.projectPrincipalId
+    projectPrincipalId: foundryProjectBYOResources.outputs.projectPrincipalId
   }
 }
 
 output azureFoundryResourceName string = foundry.outputs.accountName
 output azureFoundryResourceId string = foundry.outputs.accountID
-output azureFoundryProjectResourceName string = foundryProject.outputs.projectName
-output azureFoundryProjectResourceId string = foundryProject.outputs.projectId
-output foundryProjectProjectPrincipalId string = foundryProject.outputs.projectPrincipalId
-output aiSearchConnection string = foundryProject.outputs.aiSearchConnection
-output azureStorageConnection string = foundryProject.outputs.azureStorageConnection
-output cosmosDBConnection string = foundryProject.outputs.cosmosDBConnection
-output projectWorkspaceId string = foundryProject.outputs.projectWorkspaceId
-output aiSearchResourceName string = foundryDependencies.outputs.aiSearchName
-output azureStorageResourceName string = foundryDependencies.outputs.azureStorageName
-output cosmosDBResourceName string = foundryDependencies.outputs.cosmosDBName
+
+output azureFoundryProjectResourceName string = useAzureManagedResources
+  ? foundryProjectManagedResources.outputs.projectName
+  : foundryProjectBYOResources!.outputs.projectName
+output azureFoundryProjectResourceId string = useAzureManagedResources
+  ? foundryProjectManagedResources.outputs.projectId
+  : foundryProjectBYOResources!.outputs.projectId
+
+output foundryProjectProjectPrincipalId string = useAzureManagedResources
+  ? foundryProjectManagedResources.outputs.projectPrincipalId
+  : foundryProjectBYOResources!.outputs.projectPrincipalId
+
+output aiSearchConnection string = useAzureManagedResources
+  ? ''
+  : foundryProjectBYOResources!.outputs.aiSearchConnection
+output azureStorageConnection string = useAzureManagedResources
+  ? ''
+  : foundryProjectBYOResources!.outputs.azureStorageConnection
+output cosmosDBConnection string = useAzureManagedResources
+  ? ''
+  : foundryProjectBYOResources!.outputs.cosmosDBConnection
+output projectWorkspaceId string = useAzureManagedResources
+  ? foundryProjectManagedResources.outputs.projectWorkspaceId
+  : foundryProjectBYOResources!.outputs.projectWorkspaceId
+output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.aiSearchName
+output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.azureStorageName
+output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.cosmosDBName
 output resourceGroupName string = rg.name
