@@ -199,24 +199,28 @@ output azureFoundryResourceId string = foundry.outputs.accountID
 
 output azureFoundryProjectResourceName string = useAzureManagedResources
   ? foundryProjectManagedResources.outputs.projectName
-  : foundryProjectBYOResources.outputs.projectName
+  : foundryProjectBYOResources!.outputs.projectName
 output azureFoundryProjectResourceId string = useAzureManagedResources
   ? foundryProjectManagedResources.outputs.projectId
-  : foundryProjectBYOResources.outputs.projectId
+  : foundryProjectBYOResources!.outputs.projectId
 
 output foundryProjectProjectPrincipalId string = useAzureManagedResources
   ? foundryProjectManagedResources.outputs.projectPrincipalId
-  : foundryProjectBYOResources.outputs.projectPrincipalId
+  : foundryProjectBYOResources!.outputs.projectPrincipalId
 
-output aiSearchConnection string = useAzureManagedResources ? '' : foundryProjectBYOResources.outputs.aiSearchConnection
+output aiSearchConnection string = useAzureManagedResources
+  ? ''
+  : foundryProjectBYOResources!.outputs.aiSearchConnection
 output azureStorageConnection string = useAzureManagedResources
   ? ''
-  : foundryProjectBYOResources.outputs.azureStorageConnection
-output cosmosDBConnection string = useAzureManagedResources ? '' : foundryProjectBYOResources.outputs.cosmosDBConnection
+  : foundryProjectBYOResources!.outputs.azureStorageConnection
+output cosmosDBConnection string = useAzureManagedResources
+  ? ''
+  : foundryProjectBYOResources!.outputs.cosmosDBConnection
 output projectWorkspaceId string = useAzureManagedResources
   ? foundryProjectManagedResources.outputs.projectWorkspaceId
-  : foundryProjectBYOResources.outputs.projectWorkspaceId
-output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.aiSearchName
-output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.azureStorageName
-output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.cosmosDBName
+  : foundryProjectBYOResources!.outputs.projectWorkspaceId
+output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.aiSearchName
+output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.azureStorageName
+output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.cosmosDBName
 output resourceGroupName string = rg.name
