@@ -33,6 +33,7 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     functionResourceName: '${abbrs.webSitesFunctions}crime-${resourceToken}'
     applicationInsightResourceName: '${abbrs.insightsComponents}${resourceToken}'
     logAnalyticResourceName: '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
+    containerResourceName: 'acr${replace(resourceToken,'-','')}'
   }
 }
 
