@@ -43,3 +43,9 @@ jobs:
           name: CONTAINER_REGISTRY_NAME
           value: ${{ steps.createResources.outputs.containerRegistryResourceName}}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: MAGE_GUILD_WEB_API_RESOURCE_NAME
+          value: ${{ steps.createResources.outputs.webAppResourceName}}
+          pa_token: ${{ secrets.PA_TOKEN }}

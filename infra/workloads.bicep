@@ -34,6 +34,8 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     applicationInsightResourceName: '${abbrs.insightsComponents}${resourceToken}'
     logAnalyticResourceName: '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
     containerResourceName: 'acr${replace(resourceToken,'-','')}'
+    appServicePlanResourceName: '${abbrs.webServerFarms}${resourceToken}'
+    webAppResourceName: '${abbrs.webSitesAppService}${resourceToken}'
   }
 }
 
@@ -47,4 +49,5 @@ module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = {
 }
 
 output functionCrimeResourceName string = skyrimWorkload.outputs.functionCrimeResourceName
+output webAppResourceName string = skyrimWorkload.outputs.webApiResourceName
 output containerRegistryResourceName string = skyrimWorkload.outputs.acrResourceName
