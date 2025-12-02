@@ -18,10 +18,10 @@ jobs:
             - name: Build and Push image
               run: |
                   az acr login -n ${{ secrets.CONTAINER_REGISTRY_NAME }}
-                  az acr build -r ${{ secrets.CONTAINER_REGISTRY_NAME }} -t tamrielapi:${{ github.sha }} .
-              working-directory: src/apis/tamriel
+                  az acr build -r ${{ secrets.CONTAINER_REGISTRY_NAME }} -t mage-guild-api:${{ github.sha }} .
+              working-directory: src/apis/mage-guild-api
 
             - uses: azure/webapps-deploy@v2
               with:
                   app-name: ${{secrets.MAGE_GUILD_WEB_API_RESOURCE_NAME}}
-                  images: "${{secrets.CONTAINER_REGISTRY_NAME}}.azurecr.io/tamrielapi:${{ github.sha }}"
+                  images: "${{secrets.CONTAINER_REGISTRY_NAME}}.azurecr.io/mage-guild-api:${{ github.sha }}"
