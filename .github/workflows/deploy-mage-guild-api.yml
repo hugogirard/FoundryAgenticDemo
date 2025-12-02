@@ -1,0 +1,27 @@
+name: Build and deploy Mage Guild Web Api
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Azure Login
+              uses: Azure/login@v2
+              with:
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+            - name: Build and Push image
+              run: |
+                  az acr login -n ${{ secrets.ACR_NAME }}
+                  az acr build -r ${{ secrets.ACR_NAME }} -t tamrielapi:${{ github.sha }} .
+              working-directory: src/apis/tamriel
+
+            - uses: azure/webapps-deploy@v2
+              with:
+                  app-name: ${{secrets.TAMRIEL_WEB_APP_NAME}}
+                  images: "${{secrets.ACR_NAME}}.azurecr.io/tamrielapi:${{ github.sha }}"

@@ -37,3 +37,9 @@ jobs:
           name: FUNCTION_CRIMERE_SOURCENAME
           value: ${{ steps.createResources.outputs.functionCrimeResourceName}}
           pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: CONTAINER_REGISTRY_NAME
+          value: ${{ steps.createResources.outputs.containerRegistryResourceName}}
+          pa_token: ${{ secrets.PA_TOKEN }}

@@ -47,3 +47,4 @@ module searchProjectRBAC 'modules/ai/rbac/ai-search-role-assignments.bicep' = {
 }
 
 output functionCrimeResourceName string = skyrimWorkload.outputs.functionCrimeResourceName
+output containerRegistryResourceName string = skyrimWorkload.outputs.acrResourceName
