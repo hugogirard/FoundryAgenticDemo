@@ -8,6 +8,7 @@ jobs:
     env:
       REGION: "westus" # You can change this to reflect the region where you deploy your Accelerator
       AZURE_CORE_OUTPUT: "none" # Test
+      APP_SERVICE_REGION: "eastus2"
 
     runs-on: ubuntu-latest
 
@@ -30,7 +31,7 @@ jobs:
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           deploymentName: ${{ github.run_id }}
           template: ./infra/workloads.bicep
-          parameters: location=${{ env.REGION }} resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }} foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }}
+          parameters: location=${{ env.REGION }} resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }} foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }} appServiceLocation=${{ env.APP_SERVICE_REGION }}
 
       - uses: gliech/create-github-secret-action@v1
         with:

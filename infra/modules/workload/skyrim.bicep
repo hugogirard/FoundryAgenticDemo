@@ -9,6 +9,7 @@ param applicationInsightResourceName string
 param containerResourceName string
 param appServicePlanResourceName string
 param webAppResourceName string
+param appServiceLocation string
 
 var tags = {
   SecurityControl: 'Ignore'
@@ -194,7 +195,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2025-11-01' = {
 
 resource asp 'Microsoft.Web/serverfarms@2024-11-01' = {
   name: appServicePlanResourceName
-  location: location
+  location: appServiceLocation
   kind: 'linux'
   properties: {
     reserved: true
@@ -207,7 +208,7 @@ resource asp 'Microsoft.Web/serverfarms@2024-11-01' = {
 
 resource web 'Microsoft.Web/sites@2024-11-01' = {
   name: webAppResourceName
-  location: location
+  location: appServiceLocation
   kind: 'app,linux,container'
   identity: {
     type: 'SystemAssigned'

@@ -4,6 +4,9 @@ param location string
 param resourceGroupName string
 param foundryResourceName string
 
+@description('If you want your app service located to another region')
+param appServiceLocation string
+
 var abbrs = loadJsonContent('./abbreviations.json')
 
 resource foundry 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' existing = {
@@ -36,6 +39,7 @@ module skyrimWorkload 'modules/workload/skyrim.bicep' = {
     containerResourceName: 'acr${replace(resourceToken,'-','')}'
     appServicePlanResourceName: '${abbrs.webServerFarms}${resourceToken}'
     webAppResourceName: '${abbrs.webSitesAppService}${resourceToken}'
+    appServiceLocation: appServiceLocation
   }
 }
 
