@@ -1,0 +1,527 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "servers": [
+        {
+            "url": "__url__",
+            "description": "Azure"
+        }
+    ],
+    "paths": {
+        "/api/quests/": {
+            "get": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Get all available quests in the Mage Guild",
+                "description": "Get all quests that are currently available for adventurers.",
+                "operationId": "GetAvailableQuests_api_quests__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Quest"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Getavailablequests Api Quests  Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quests/{quest_id}": {
+            "get": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Get details of a specific quest",
+                "description": "Get detailed information about a specific quest by its ID.",
+                "operationId": "GetQuestById_api_quests__quest_id__get",
+                "parameters": [
+                    {
+                        "name": "quest_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Quest Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Quest"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quests/enroll": {
+            "post": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Enroll an adventurer in a quest",
+                "description": "Enroll an adventurer in a specific quest.",
+                "operationId": "EnrollInQuest_api_quests_enroll_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EnrollQuestRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/QuestEnrollment"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quests/enrollments/{adventurer_name}": {
+            "get": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Get all quest enrollments for an adventurer",
+                "description": "Get all quest enrollments for a specific adventurer.",
+                "operationId": "GetAdventurerEnrollments_api_quests_enrollments__adventurer_name__get",
+                "parameters": [
+                    {
+                        "name": "adventurer_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Adventurer Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/QuestEnrollment"
+                                    },
+                                    "title": "Response Getadventurerenrollments Api Quests Enrollments  Adventurer Name  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quests/complete": {
+            "post": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Mark a quest as completed",
+                "description": "Mark a quest enrollment as completed.",
+                "operationId": "CompleteQuest_api_quests_complete_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CompleteQuestRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quests/claim-reward/{enrollment_id}": {
+            "post": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Claim the reward for a completed quest",
+                "description": "Claim the reward for a completed quest enrollment.",
+                "operationId": "ClaimReward_api_quests_claim_reward__enrollment_id__post",
+                "parameters": [
+                    {
+                        "name": "enrollment_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Enrollment Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClaimRewardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/quests/reset": {
+            "post": {
+                "tags": [
+                    "Quests"
+                ],
+                "summary": "Reset all in-memory data",
+                "description": "Reset all in-memory data: clears all quest enrollments and reloads quests from the original JSON file.",
+                "operationId": "ResetData_api_quests_reset_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ClaimRewardResponse": {
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "title": "Success",
+                        "description": "Indicates whether the reward claim was successful"
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message",
+                        "description": "Descriptive message about the reward claim result"
+                    },
+                    "goldReceived": {
+                        "type": "integer",
+                        "title": "Goldreceived",
+                        "description": "Amount of gold the adventurer received"
+                    },
+                    "itemReceived": {
+                        "type": "string",
+                        "title": "Itemreceived",
+                        "description": "Name of the item the adventurer received"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "success",
+                    "message",
+                    "goldReceived",
+                    "itemReceived"
+                ],
+                "title": "ClaimRewardResponse",
+                "description": "Response returned when an adventurer claims their quest reward."
+            },
+            "CompleteQuestRequest": {
+                "properties": {
+                    "enrollmentId": {
+                        "type": "string",
+                        "title": "Enrollmentid",
+                        "description": "The unique identifier of the quest enrollment to complete"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "enrollmentId"
+                ],
+                "title": "CompleteQuestRequest",
+                "description": "Request to mark a quest as completed."
+            },
+            "EnrollQuestRequest": {
+                "properties": {
+                    "questId": {
+                        "type": "string",
+                        "title": "Questid",
+                        "description": "The unique identifier of the quest to enroll in"
+                    },
+                    "adventurerName": {
+                        "type": "string",
+                        "title": "Adventurername",
+                        "description": "The name of the adventurer enrolling in the quest"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "questId",
+                    "adventurerName"
+                ],
+                "title": "EnrollQuestRequest",
+                "description": "Request to enroll an adventurer in a quest."
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Quest": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id",
+                        "description": "Unique identifier for the quest"
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Title",
+                        "description": "The name of the quest as displayed in the journal"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "description": "Detailed description of the quest objectives and background story"
+                    },
+                    "difficulty": {
+                        "type": "string",
+                        "title": "Difficulty",
+                        "description": "Quest difficulty level (e.g., 'Novice', 'Apprentice', 'Adept', 'Expert', 'Master')"
+                    },
+                    "rewardGold": {
+                        "type": "integer",
+                        "title": "Rewardgold",
+                        "description": "Amount of gold awarded upon quest completion"
+                    },
+                    "rewardItem": {
+                        "type": "string",
+                        "title": "Rewarditem",
+                        "description": "Special item or equipment rewarded for completing the quest"
+                    },
+                    "isAvailable": {
+                        "type": "boolean",
+                        "title": "Isavailable",
+                        "description": "Whether the quest is currently available to accept"
+                    },
+                    "location": {
+                        "type": "string",
+                        "title": "Location",
+                        "description": "Primary location where the quest takes place (e.g., 'College of Winterhold', 'Saarthal')"
+                    },
+                    "questGiver": {
+                        "type": "string",
+                        "title": "Questgiver",
+                        "description": "NPC who assigns the quest (e.g., 'Arch-Mage Savos Aren', 'Tolfdir')"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "title",
+                    "description",
+                    "difficulty",
+                    "rewardGold",
+                    "rewardItem",
+                    "isAvailable",
+                    "location",
+                    "questGiver"
+                ],
+                "title": "Quest",
+                "description": "Represents a quest available from the Mage Guild in Skyrim."
+            },
+            "QuestEnrollment": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id",
+                        "description": "Unique identifier for the quest enrollment"
+                    },
+                    "questId": {
+                        "type": "string",
+                        "title": "Questid",
+                        "description": "Reference to the Quest ID that the adventurer is enrolled in"
+                    },
+                    "adventurerName": {
+                        "type": "string",
+                        "title": "Adventurername",
+                        "description": "Name of the adventurer who enrolled in the quest"
+                    },
+                    "enrolledDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Enrolleddate",
+                        "description": "Date and time when the adventurer accepted the quest"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/QuestStatus",
+                        "description": "Current status of the quest (InProgress, Completed, Failed, or Abandoned)"
+                    },
+                    "completedDate": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Completeddate",
+                        "description": "Date and time when the quest was completed, failed, or abandoned"
+                    },
+                    "rewardClaimed": {
+                        "type": "boolean",
+                        "title": "Rewardclaimed",
+                        "description": "Whether the adventurer has claimed their reward for completing the quest"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "questId",
+                    "adventurerName",
+                    "enrolledDate",
+                    "status",
+                    "rewardClaimed"
+                ],
+                "title": "QuestEnrollment",
+                "description": "Represents an adventurer's enrollment in a Mage Guild quest."
+            },
+            "QuestStatus": {
+                "type": "string",
+                "enum": [
+                    "InProgress",
+                    "Completed",
+                    "Failed",
+                    "Abandoned"
+                ],
+                "title": "QuestStatus",
+                "description": "Status of an adventurer's quest enrollment."
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
