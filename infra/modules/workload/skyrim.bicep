@@ -6,6 +6,7 @@ param storageFunctionResourceName string
 param functionResourceName string
 param logAnalyticResourceName string
 param applicationInsightResourceName string
+param containerResourceName string
 
 var tags = {
   SecurityControl: 'Ignore'
@@ -173,6 +174,19 @@ module function '../serverless/function.bicep' = {
     logAnalyticResourceName: logAnalyticResourceName
     applicationInsightResourceName: applicationInsightResourceName
     tags: tags
+  }
+}
+
+resource acr 'Microsoft.ContainerRegistry/registries@2025-11-01' = {
+  name: containerResourceName
+  location: location
+  tags: tags
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    adminUserEnabled: true
+    publicNetworkAccess: 'Enabled'
   }
 }
 
