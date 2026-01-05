@@ -24,8 +24,7 @@ param embeddingModelProperties = {
 
 param embeddingModelSkuCapacity = 150
 
-// Today only North Central US support Self Hosted Agents
-param location = 'northcentralus'
+param location = 'westus'
 
 param resourceGroupName = 'rg-agentic-demo'
 
