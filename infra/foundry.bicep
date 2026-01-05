@@ -207,14 +207,14 @@ output azureFoundryResourceName string = foundry.outputs.accountName
 output azureFoundryResourceId string = foundry.outputs.accountID
 
 output azureFoundryProjectResourceName string = useAzureManagedResources
-  ? foundryProjectManagedResources.outputs.projectName
+  ? foundryProjectManagedResources!.outputs.projectName
   : foundryProjectBYOResources!.outputs.projectName
 output azureFoundryProjectResourceId string = useAzureManagedResources
-  ? foundryProjectManagedResources.outputs.projectId
+  ? foundryProjectManagedResources!.outputs.projectId
   : foundryProjectBYOResources!.outputs.projectId
 
 output foundryProjectProjectPrincipalId string = useAzureManagedResources
-  ? foundryProjectManagedResources.outputs.projectPrincipalId
+  ? foundryProjectManagedResources!.outputs.projectPrincipalId
   : foundryProjectBYOResources!.outputs.projectPrincipalId
 
 output aiSearchConnection string = useAzureManagedResources
@@ -227,9 +227,9 @@ output cosmosDBConnection string = useAzureManagedResources
   ? ''
   : foundryProjectBYOResources!.outputs.cosmosDBConnection
 output projectWorkspaceId string = useAzureManagedResources
-  ? foundryProjectManagedResources.outputs.projectWorkspaceId
+  ? foundryProjectManagedResources!.outputs.projectWorkspaceId
   : foundryProjectBYOResources!.outputs.projectWorkspaceId
-output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.aiSearchName
-output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.azureStorageName
-output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.cosmosDBName
+output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.aiSearchName
+output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.azureStorageName
+output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.cosmosDBName
 output resourceGroupName string = rg.name
