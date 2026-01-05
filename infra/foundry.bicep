@@ -86,9 +86,13 @@ module chatCompletionModel 'modules/ai/model-deployment.bicep' = {
     skuCapacity: chatModelSkuCapacity
     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
   }
-  dependsOn: [
-    foundryProjectBYOResources
-  ]
+  dependsOn: useAzureManagedResources
+    ? [
+        foundryProjectManagedResources
+      ]
+    : [
+        foundryProjectBYOResources
+      ]
 }
 
 module embeddingnModel 'modules/ai/model-deployment.bicep' = {
@@ -101,10 +105,15 @@ module embeddingnModel 'modules/ai/model-deployment.bicep' = {
     skuCapacity: embeddingModelSkuCapacity
     versionUpgradeOption: 'NoAutoUpgrade'
   }
-  dependsOn: [
-    foundryProjectBYOResources
-    chatCompletionModel
-  ]
+  dependsOn: useAzureManagedResources
+    ? [
+        foundryProjectManagedResources
+        chatCompletionModel
+      ]
+    : [
+        foundryProjectBYOResources
+        chatCompletionModel
+      ]
 }
 
 // DNS And Private Endpoint
@@ -144,7 +153,7 @@ module foundryProjectBYOResources 'modules/ai/project_byo_resources.bicep' = if 
   }
 }
 
-module foundryProjectManagedResources 'modules/ai/project_managed_resources.bicep' = {
+module foundryProjectManagedResources 'modules/ai/project_managed_resources.bicep' = if (useAzureManagedResources) {
   scope: rg
   params: {
     location: location
@@ -220,7 +229,7 @@ output cosmosDBConnection string = useAzureManagedResources
 output projectWorkspaceId string = useAzureManagedResources
   ? foundryProjectManagedResources.outputs.projectWorkspaceId
   : foundryProjectBYOResources!.outputs.projectWorkspaceId
-output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.aiSearchName
-output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.azureStorageName
-output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies!.outputs.cosmosDBName
+output aiSearchResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.aiSearchName
+output azureStorageResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.azureStorageName
+output cosmosDBResourceName string = useAzureManagedResources ? '' : foundryDependencies.outputs.cosmosDBName
 output resourceGroupName string = rg.name

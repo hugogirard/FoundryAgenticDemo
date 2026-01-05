@@ -7,6 +7,7 @@ An AI-powered crime tracking system for the world of Skyrim, demonstrating Azure
 All detailed documentation is available in the `documents/` folder:
 
 - **[Infrastructure Documentation](documents/INFRASTRUCTURE.md)** - Complete guide to Azure infrastructure, Bicep templates, deployment process, network architecture, and GitHub Actions workflows
+- **[Crime Data Setup Guide](documents/CRIME.MD)** - Instructions for uploading crime data to Cosmos DB and configuring full-text search
 
 ## 📁 Project Structure
 
