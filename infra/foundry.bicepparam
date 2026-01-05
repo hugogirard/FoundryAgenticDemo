@@ -24,8 +24,8 @@ param embeddingModelProperties = {
 
 param embeddingModelSkuCapacity = 150
 
-param location = 'westus'
+param location = 'northcentralus'
 
-param resourceGroupName = 'rg-skyrim-world'
+param resourceGroupName = 'rg-agentic-demo'
 
 param useAzureManagedResources = true

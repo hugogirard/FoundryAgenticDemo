@@ -2,7 +2,7 @@ targetScope = 'subscription'
 
 @minLength(1)
 @description('Primary location for all resources')
-@allowed(['canadaeast', 'westus'])
+@allowed(['canadaeast', 'westus', 'northcentralus'])
 param location string
 
 @description('The name of the resource group that will contains the resource')
