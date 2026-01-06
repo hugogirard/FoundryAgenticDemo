@@ -19,7 +19,7 @@ jobs:
               run: |
                   az acr login -n ${{ secrets.CONTAINER_REGISTRY_NAME }}
                   az acr build -r ${{ secrets.CONTAINER_REGISTRY_NAME }} -t mage-guild-api:${{ github.sha }} .
-              working-directory: src/apis/mage-guild-api
+              working-directory: src/apis/mage-guild
 
             - uses: azure/webapps-deploy@v2
               with:
