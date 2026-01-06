@@ -167,6 +167,27 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
 }
 
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2025-06-01' = {
+  parent: storage
+  name: 'default'
+}
+
+resource bountyContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-06-01' = {
+  parent: blobService
+  name: 'bounty'
+  properties: {
+    publicAccess: 'None'
+  }
+}
+
+resource documentsContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-06-01' = {
+  parent: blobService
+  name: 'documents'
+  properties: {
+    publicAccess: 'None'
+  }
+}
+
 module function '../serverless/function.bicep' = {
   name: 'function'
   params: {
