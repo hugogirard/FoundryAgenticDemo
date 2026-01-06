@@ -23,13 +23,23 @@ After infrastructure deployment, populate the crime database and configure searc
 - Configuring full-text search and indexing
 - Testing data queries and search functionality
 
+### **Step 3: MCP Server Deployment**
+📖 **[Then: MCP Server Deployment Guide](documents/MCP_SERVER.md)**
+
+Deploy the Model Context Protocol (MCP) server that enables AI agents to query crime data. This guide covers:
+- Deploying the Azure Function MCP server
+- Testing with MCP Inspector
+- Integrating with AI agents
+- Monitoring and troubleshooting
+
 ## 📁 Project Structure
 
 ```
 FoundryAgenticDemo/
 ├── documents/              # Documentation
 │   ├── INFRASTRUCTURE.md   # Step 1: Infrastructure deployment
-│   └── CRIME.MD            # Step 2: Crime data setup
+│   ├── CRIME.MD            # Step 2: Crime data setup
+│   └── MCP_SERVER.md       # Step 3: MCP server deployment
 ├── infra/                  # Bicep infrastructure templates
 ├── src/                    # Source code (agents, APIs, MCP servers)
 ├── notebook/               # Jupyter notebooks
@@ -44,6 +54,7 @@ All detailed documentation is available in the `documents/` folder:
 
 - **[Infrastructure Documentation](documents/INFRASTRUCTURE.md)** - Complete guide to Azure infrastructure, Bicep templates, deployment process, network architecture, and GitHub Actions workflows
 - **[Crime Data Setup Guide](documents/CRIME.MD)** - Instructions for uploading crime data to Cosmos DB and configuring full-text search
+- **[MCP Server Deployment Guide](documents/MCP_SERVER.md)** - Instructions for deploying and testing the Model Context Protocol server
 
 ---
 
