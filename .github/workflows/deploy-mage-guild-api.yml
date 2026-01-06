@@ -18,7 +18,7 @@ jobs:
             - name: Build and Push image
               run: |
                   az acr login -n ${{ secrets.CONTAINER_REGISTRY_NAME }}
-                  az acr build -r ${{ secrets.CONTAINER_REGISTRY_NAME }} -t mage-guild-api:${{ github.sha }} .
+                  az acr build -r ${{ secrets.CONTAINER_REGISTRY_NAME }} -t mage-guild-api:${{ github.sha }} -t mage-guild-api:latest --build-arg BUILDKIT_INLINE_CACHE=1 .
               working-directory: src/APIS/mage-guild
 
             - uses: azure/webapps-deploy@v2
