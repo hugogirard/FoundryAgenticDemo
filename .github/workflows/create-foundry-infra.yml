@@ -38,6 +38,12 @@ jobs:
           template: ./infra/foundry.bicep
           parameters: ./infra/foundry.bicepparam useAzureManagedResources=${{ inputs.use-azure-managed-ressources }}
 
+      - name: Debug outputs
+        run: |
+          echo "Resource Group Name: ${{ steps.createResources.outputs.resourceGroupName }}"
+          echo "Foundry Name: ${{ steps.createResources.outputs.azureFoundryResourceName }}"
+          echo "All outputs: ${{ toJSON(steps.createResources.outputs) }}"
+
       - name: Set secrets using gh CLI
         env:
           GH_TOKEN: ${{ secrets.PA_TOKEN }}
