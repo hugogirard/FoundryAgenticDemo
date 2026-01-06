@@ -168,6 +168,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
 }
 
 module function '../serverless/function.bicep' = {
+  name: 'function'
   params: {
     location: location
     appServicePlanName: appServicePlanName
