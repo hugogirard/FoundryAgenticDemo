@@ -180,9 +180,9 @@ resource bountyContainer 'Microsoft.Storage/storageAccounts/blobServices/contain
   }
 }
 
-resource documentsContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-06-01' = {
+resource crimePenaltyContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-06-01' = {
   parent: blobService
-  name: 'documents'
+  name: 'crimepenalty'
   properties: {
     publicAccess: 'None'
   }
