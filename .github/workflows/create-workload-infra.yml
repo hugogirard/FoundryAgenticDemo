@@ -31,7 +31,7 @@ jobs:
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           deploymentName: ${{ github.run_id }}
           template: ./infra/workloads.bicep
-          parameters: location=${{ env.REGION }} resourceGroupName=${{ secrets.RESOURCE_GROUP_NAME }} foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }} appServiceLocation=${{ env.APP_SERVICE_REGION }}
+          parameters: location=${{ env.REGION }} foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }} appServiceLocation=${{ env.APP_SERVICE_REGION }}
 
       - uses: gliech/create-github-secret-action@v1
         with:

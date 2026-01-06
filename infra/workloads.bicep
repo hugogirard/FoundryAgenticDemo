@@ -1,7 +1,6 @@
 targetScope = 'resourceGroup'
 
 param location string
-param resourceGroupName string
 param foundryResourceName string
 
 @description('If you want your app service located to another region')
@@ -15,7 +14,7 @@ resource foundry 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' exist
 }
 
 #disable-next-line no-unused-vars
-var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
+var resourceToken = toLower(uniqueString(subscription().id, resourceGroup().name, location))
 
 /* Separate AI Search Instance for Foundry IQ */
 module foundryIQSearch 'modules/ai/IQ/search.bicep' = {
