@@ -106,78 +106,97 @@ indexingPolicy: {
 
 **Purpose**: Creates optimized indexes for fast text-based queries.
 
-## Step 3: Verify Full-Text Search Configuration
+## Step 3: Test Full-Text Search Queries
 
-### Using Azure Portal
+The crime container has two fields configured with full-text search capabilities:
+- **`/crimeName`** - Full-text indexed and searchable
+- **`/description`** - Full-text indexed and searchable
 
-1. **Open Container Settings**:
-   - Navigate to Data Explorer
-   - Right-click on `crime` container
-   - Select **Settings**
+### Using Azure Data Explorer
 
-2. **Check Indexing Policy**:
-   - Scroll to **Indexing Policy** section
-   - Verify full-text indexes are present:
+1. Open **Data Explorer** in Azure Portal
+2. Navigate to `skyrim` database → `crime` container
+3. Click **New SQL Query**
+4. Test the queries below
 
-   ![Full-Text Index Configuration](../images/fulltextindex.png)
+### Full-Text Search Query Examples
 
-3. **Check Full-Text Policy**:
-   - Look for **Full-Text Search** configuration
-   - Verify paths for `crimeName` and `description`
-
-   ![Full-Text Search Configuration](../images/fulltextsearch.png)
-
-4. **Review Complete Indexing**:
-   - Verify all indexing policies are active
-   
-   ![Indexing Configuration](../images/indexing.png)
-
-## Step 4: Test Full-Text Search Queries
-
-### Example Queries
-
-**Query 1: Search by crime name**
+**Query 1: Search for specific text in crime name**
 ```sql
-SELECT * FROM c 
-WHERE CONTAINS(c.crimeName, "theft", true)
+SELECT TOP 10 c.crimeName, c.city, c.reward
+FROM c
+WHERE FullTextContains(c.crimeName, "theft")
 ```
+*Finds all crimes with "theft" in the name using full-text search with stemming (e.g., "theft", "thefts", "stealing")*
 
-**Query 2: Search by description**
+**Query 2: Search for text in descriptions**
 ```sql
-SELECT * FROM c 
-WHERE CONTAINS(c.description, "mage", true)
+SELECT TOP 10 c.crimeName, c.suspectName, c.description
+FROM c
+WHERE FullTextContains(c.description, "dragon")
 ```
+*Searches for "dragon" in crime descriptions using full-text indexing*
 
-**Query 3: Search by city and crime type**
+**Query 3: Search for multiple keywords (ALL must be present)**
 ```sql
-SELECT * FROM c 
+SELECT TOP 10 c.crimeName, c.description, c.city
+FROM c
+WHERE FullTextContainsAll(c.description, "armor", "warrior")
+```
+*Returns crimes where BOTH "armor" AND "warrior" appear in the description*
+
+**Query 4: Search for any keyword**
+```sql
+SELECT TOP 10 c.crimeName, c.description, c.reward
+FROM c
+WHERE FullTextContainsAny(c.description, "mage", "wizard", "sorcerer")
+```
+*Returns crimes where ANY of these magic-related terms appear in the description*
+
+**Query 5: Combine full-text search on both indexed fields**
+```sql
+SELECT TOP 10 c.crimeName, c.suspectName, c.city, c.reward
+FROM c
+WHERE FullTextContains(c.crimeName, "murder") 
+   OR FullTextContains(c.description, "murder")
+```
+*Searches across both crimeName and description fields*
+
+**Query 6: Full-text search with relevance ranking**
+```sql
+SELECT TOP 10 c.crimeName, c.description, c.reward
+FROM c
+WHERE FullTextContains(c.description, "theft")
+ORDER BY RANK FullTextScore(c.description, "theft")
+```
+*Returns results sorted by relevance score (most relevant first) using BM25 algorithm*
+
+**Query 7: Filter by city with full-text search**
+```sql
+SELECT c.crimeName, c.suspectName, c.reward
+FROM c
 WHERE c.city = "Whiterun" 
-AND c.crimeType = "pettyTheft"
+  AND FullTextContains(c.description, "gold")
 ```
+*Combines traditional filtering with full-text search*
 
-**Query 4: Full-text search across multiple fields**
+**Query 8: High-reward crimes with keyword search**
 ```sql
-SELECT * FROM c 
-WHERE CONTAINS(c.crimeName, "dragon", true) 
-   OR CONTAINS(c.description, "dragon", true)
-```
-
-**Query 5: High-reward crimes**
-```sql
-SELECT c.crimeName, c.suspectName, c.reward 
-FROM c 
+SELECT c.crimeName, c.suspectName, c.reward, c.description
+FROM c
 WHERE c.reward > 1500
+  AND FullTextContainsAny(c.crimeName, "assassination", "murder", "poisoning")
 ORDER BY c.reward DESC
 ```
+*Finds high-value crimes involving serious offenses*
 
-### Testing in Azure Portal
+### Expected Results
 
-1. Open **Data Explorer**
-2. Select the `crime` container
-3. Click **New SQL Query**
-4. Paste one of the example queries
-5. Click **Execute Query**
-6. Review results
+After running these queries, you should see:
+- Fast query execution using full-text indexes
+- Results with stemming (e.g., "theft" matches "Theft", "thefts")
+- Natural language search capabilities across 466 crime records
+- Relevance-based ranking when using FullTextScore
 
 ## Data Statistics
 

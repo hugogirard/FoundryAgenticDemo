@@ -19,11 +19,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Debug secrets
-        run: |
-          echo "Resource Group: ${{ secrets.RESOURCE_GROUP_NAME }}"
-          echo "Foundry Name: ${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }}"
-
       # Temp fix
       - name: bicep tmp fix
         run: az config set bicep.use_binary_from_path=false
