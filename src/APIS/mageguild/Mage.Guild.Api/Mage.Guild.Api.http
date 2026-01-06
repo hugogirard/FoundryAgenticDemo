@@ -1,6 +1,0 @@
-@Mage.Guild.Api_HostAddress = http://localhost:5095
-
-GET {{Mage.Guild.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

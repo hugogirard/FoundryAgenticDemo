@@ -249,6 +249,14 @@ resource web 'Microsoft.Web/sites@2024-11-01' = {
   }
 }
 
+resource appSettings 'Microsoft.Web/sites/config@2024-11-01' = {
+  name: 'appsettings'
+  parent: web
+  properties: {
+    SERVER_URL: 'https://${web.properties.defaultHostName}'
+  }
+}
+
 @description('Built-in Role: [AcrPull]')
 resource acr_pull 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
