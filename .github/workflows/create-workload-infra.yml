@@ -28,29 +28,25 @@ jobs:
       - name: bicep tmp fix
         run: az config set bicep.use_binary_from_path=false
 
-      - uses: azure/arm-deploy@v2
+      - name: deploy
         id: createResources
-        with:
-          scope: resourcegroup
-          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-          deploymentName: ${{ github.run_id }}
-          template: ./infra/workloads.bicep
-          parameters: ./infra/workloads.bicepparam foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }}
+        run: |
+          az deployment group create \
+            --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} \
+            --name ${{ github.run_id }} \
+            --template-file ./infra/workloads.bicep \
+            --parameters ./infra/workloads.bicepparam foundryResourceName=${{ secrets.AZURE_FOUNDRY_RESOURCE_NAME }} \
+            --query 'properties.outputs' \
+            --output json > outputs.json
 
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: FUNCTION_CRIMERE_SOURCENAME
-          value: ${{ steps.createResources.outputs.functionCrimeResourceName}}
-          pa_token: ${{ secrets.PA_TOKEN }}
+          echo "functionCrimeResourceName=$(jq -r '.functionCrimeResourceName.value' outputs.json)" >> $GITHUB_OUTPUT
+          echo "containerRegistryResourceName=$(jq -r '.containerRegistryResourceName.value' outputs.json)" >> $GITHUB_OUTPUT
+          echo "webAppResourceName=$(jq -r '.webAppResourceName.value' outputs.json)" >> $GITHUB_OUTPUT
 
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: CONTAINER_REGISTRY_NAME
-          value: ${{ steps.createResources.outputs.containerRegistryResourceName}}
-          pa_token: ${{ secrets.PA_TOKEN }}
-
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: MAGE_GUILD_WEB_API_RESOURCE_NAME
-          value: ${{ steps.createResources.outputs.webAppResourceName}}
-          pa_token: ${{ secrets.PA_TOKEN }}
+      - name: Set secrets using gh CLI
+        env:
+          GH_TOKEN: ${{ secrets.PA_TOKEN }}
+        run: |
+          gh secret set FUNCTION_CRIMERE_SOURCENAME --body "${{ steps.createResources.outputs.functionCrimeResourceName }}"
+          gh secret set CONTAINER_REGISTRY_NAME --body "${{ steps.createResources.outputs.containerRegistryResourceName }}"
+          gh secret set MAGE_GUILD_WEB_API_RESOURCE_NAME --body "${{ steps.createResources.outputs.webAppResourceName }}"
