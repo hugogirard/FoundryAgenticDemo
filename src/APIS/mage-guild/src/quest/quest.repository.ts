@@ -48,7 +48,7 @@ export class QuestRepository {
     }
 
     completeQuest(id: string, adventurerName: string): QuestEnrollement | null {
-        const idx = this.questEnrollements.findIndex(e => e.id === id && e.adventurerName === adventurerName);
+        const idx = this.questEnrollements.findIndex(e => e.questId === id && e.adventurerName === adventurerName);
 
         if (idx != -1) {
             const enrollement = this.questEnrollements[idx];
@@ -68,7 +68,7 @@ export class QuestRepository {
     cancelQuest(id: string, adventurerName: string): void {
 
         const idxQuest = this.quests.findIndex(x => x.id === id);
-        const idxEnroll = this.questEnrollements.findIndex(e => e.id === id && e.adventurerName === adventurerName);
+        const idxEnroll = this.questEnrollements.findIndex(e => e.questId === id && e.adventurerName === adventurerName);
 
         if (idxEnroll != -1 && idxQuest != -1) {
             this.questEnrollements.splice(idxEnroll, 1);

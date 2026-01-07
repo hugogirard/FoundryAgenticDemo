@@ -35,8 +35,7 @@ export class QuestController {
     })
     @ApiParam({
         name: 'id',
-        description: 'Unique identifier of the quest to retrieve',
-        example: 'quest-001'
+        description: 'Unique identifier of the quest to retrieve'
     })
     @ApiResponse({
         status: 200,
@@ -64,8 +63,7 @@ export class QuestController {
     })
     @ApiParam({
         name: 'adventurerName',
-        description: 'Name of the adventurer whose enrolled quests to retrieve',
-        example: 'Gandalf'
+        description: 'Name of the adventurer whose enrolled quests to retrieve'
     })
     @ApiResponse({
         status: 200,
@@ -83,15 +81,7 @@ export class QuestController {
     })
     @ApiBody({
         type: Enrollement,
-        description: 'Enrollment details including quest ID and adventurer name',
-        examples: {
-            example1: {
-                value: {
-                    questId: 'quest-001',
-                    adventurerName: 'Gandalf'
-                }
-            }
-        }
+        description: 'Enrollment details including quest ID and adventurer name'
     })
     @ApiResponse({
         status: 201,
@@ -120,15 +110,7 @@ export class QuestController {
     })
     @ApiBody({
         type: Enrollement,
-        description: 'Quest cancellation details including quest ID and adventurer name',
-        examples: {
-            example1: {
-                value: {
-                    questId: 'quest-001',
-                    adventurerName: 'Gandalf'
-                }
-            }
-        }
+        description: 'Quest cancellation details including quest ID and adventurer name'
     })
     @ApiResponse({
         status: 200,
@@ -149,15 +131,7 @@ export class QuestController {
     })
     @ApiBody({
         type: Enrollement,
-        description: 'Quest completion details including quest ID and adventurer name',
-        examples: {
-            example1: {
-                value: {
-                    questId: 'quest-001',
-                    adventurerName: 'Gandalf'
-                }
-            }
-        }
+        description: 'Quest completion details including quest ID and adventurer name'
     })
     @ApiResponse({
         status: 200,
