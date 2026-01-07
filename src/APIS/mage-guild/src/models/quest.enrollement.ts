@@ -1,6 +1,6 @@
 
 
-export interface QuestEnrollement {
+export class QuestEnrollement {
     id: string;
     questId: string;
     adventurerName: string;
