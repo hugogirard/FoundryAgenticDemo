@@ -1,7 +1,9 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { QuestRepository } from './quest.repository';
 import type { Quest } from 'src/models/quest';
-import { ApiOperation } from '@nestjs/swagger'
+import { ApiBody, ApiOperation } from '@nestjs/swagger'
+import { Enrollement } from 'src/payload/enrollment';
+import { QuestEnrollement } from 'src/models/quest.enrollement';
 
 
 @Controller('api/quest')
@@ -25,7 +27,7 @@ export class QuestController {
         summary: 'Retrieve speficic quest',
         description: 'Retrieve specific quest by id from the mage guild'
     })
-    getQuestById(@Param('id') id: string): Quest {
+    getQuestById(@Param('id') id: string): Quest | undefined {
         const quest = this.questRepository.getQuestById(id);
 
         if (quest === null) {
@@ -33,6 +35,25 @@ export class QuestController {
         }
 
         return quest;
+    }
+
+    @Post('enroll')
+    @ApiOperation({
+        summary: 'Enroll to mage quest',
+        description: 'Enroll to a mage guild quest'
+    })
+    @ApiBody({
+        type: Enrollement
+    })
+    enrollIntoQuest(@Body() enrollement: Enrollement): QuestEnrollement | undefined {
+
+        const questEnrollement = this.questRepository.takeQuestById(enrollement.questId, enrollement.adventurerName);
+
+        if (questEnrollement === null) {
+            throw new BadRequestException(`The quest ${enrollement.questId} for adventurer ${enrollement.adventurerName} cannot be taken`);
+        }
+
+        return questEnrollement;
     }
 
 }

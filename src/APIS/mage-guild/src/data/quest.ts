@@ -1,0 +1,200 @@
+export const quests = [
+    {
+        "id": "quest-001",
+        "title": "First Lessons",
+        "description": "Learn the basics of magic at the College of Winterhold. Attend your first lecture with Tolfdir and demonstrate your magical abilities.",
+        "difficulty": "Novice",
+        "rewardGold": 100,
+        "rewardItem": "Lesser Soul Gem",
+        "isAvailable": true,
+        "location": "College of Winterhold",
+        "questGiver": "Mirabelle Ervine"
+    },
+    {
+        "id": "quest-002",
+        "title": "Under Saarthal",
+        "description": "Join the excavation at Saarthal and discover ancient secrets buried beneath the ruins. Uncover mysterious artifacts and face the dangers within.",
+        "difficulty": "Apprentice",
+        "rewardGold": 250,
+        "rewardItem": "Saarthal Amulet",
+        "isAvailable": true,
+        "location": "Saarthal",
+        "questGiver": "Tolfdir"
+    },
+    {
+        "id": "quest-003",
+        "title": "Hitting the Books",
+        "description": "Search for books about the Eye of Magnus in the Arcanaeum. Travel to Fellglow Keep to recover stolen books from renegade mages.",
+        "difficulty": "Adept",
+        "rewardGold": 400,
+        "rewardItem": "Spell Tome: Fireball",
+        "isAvailable": true,
+        "location": "Fellglow Keep",
+        "questGiver": "Urag gro-Shub"
+    },
+    {
+        "id": "quest-004",
+        "title": "Good Intentions",
+        "description": "Investigate the Augur of Dunlain deep within the College to learn more about the mysterious Eye of Magnus and its powers.",
+        "difficulty": "Adept",
+        "rewardGold": 500,
+        "rewardItem": "Grand Soul Gem",
+        "isAvailable": true,
+        "location": "The Midden",
+        "questGiver": "Ancano"
+    },
+    {
+        "id": "quest-005",
+        "title": "Revealing the Unseen",
+        "description": "Help Mirabelle identify a magical artifact by locating focusing crystals in Mzulft, a Dwemer ruin filled with ancient automatons.",
+        "difficulty": "Expert",
+        "rewardGold": 600,
+        "rewardItem": "Dwarven Mechanism",
+        "isAvailable": true,
+        "location": "Mzulft",
+        "questGiver": "Mirabelle Ervine"
+    },
+    {
+        "id": "quest-006",
+        "title": "Containment",
+        "description": "Defend the College from a magical catastrophe as the Eye of Magnus threatens to destroy everything. Fight alongside the faculty to contain its power.",
+        "difficulty": "Expert",
+        "rewardGold": 800,
+        "rewardItem": "Enchanted Ring of Warding",
+        "isAvailable": true,
+        "location": "College of Winterhold",
+        "questGiver": "Mirabelle Ervine"
+    },
+    {
+        "id": "quest-007",
+        "title": "The Staff of Magnus",
+        "description": "Journey to Labyrinthian and recover the legendary Staff of Magnus, the only artifact powerful enough to control the Eye of Magnus.",
+        "difficulty": "Master",
+        "rewardGold": 1000,
+        "rewardItem": "Staff of Magnus",
+        "isAvailable": true,
+        "location": "Labyrinthian",
+        "questGiver": "Savos Aren"
+    },
+    {
+        "id": "quest-008",
+        "title": "The Eye of Magnus",
+        "description": "Use the Staff of Magnus to contain the Eye and defend the College from the Thalmor. Confront Ancano in a final battle for the fate of Winterhold.",
+        "difficulty": "Master",
+        "rewardGold": 1500,
+        "rewardItem": "Archmage's Robes",
+        "isAvailable": true,
+        "location": "College of Winterhold",
+        "questGiver": "Tolfdir"
+    },
+    {
+        "id": "quest-009",
+        "title": "Arniel's Endeavor",
+        "description": "Assist Arniel Gane with his dangerous research into the disappearance of the Dwemer. Deliver warped soul gems to various Dwemer ruins.",
+        "difficulty": "Adept",
+        "rewardGold": 500,
+        "rewardItem": "Keening",
+        "isAvailable": true,
+        "location": "Various Dwemer Ruins",
+        "questGiver": "Arniel Gane"
+    },
+    {
+        "id": "quest-010",
+        "title": "Destruction Ritual Spell",
+        "description": "Complete Faralda's trial to prove your mastery of destruction magic. Venture into The Midden to test your skills against powerful enemies.",
+        "difficulty": "Expert",
+        "rewardGold": 750,
+        "rewardItem": "Spell Tome: Fire Storm",
+        "isAvailable": true,
+        "location": "The Midden",
+        "questGiver": "Faralda"
+    },
+    {
+        "id": "quest-011",
+        "title": "Conjuration Ritual Spell",
+        "description": "Prove your skill in conjuration magic by summoning and binding powerful daedra. Travel to the Dread Zombie to complete your trial.",
+        "difficulty": "Expert",
+        "rewardGold": 750,
+        "rewardItem": "Spell Tome: Dead Thrall",
+        "isAvailable": true,
+        "location": "Pilgrim's Trench",
+        "questGiver": "Phinis Gestor"
+    },
+    {
+        "id": "quest-012",
+        "title": "Alteration Ritual Spell",
+        "description": "Demonstrate mastery of alteration magic by recovering the Heartscales from a dragon's lair and bringing them to Tolfdir.",
+        "difficulty": "Expert",
+        "rewardGold": 750,
+        "rewardItem": "Spell Tome: Dragonhide",
+        "isAvailable": true,
+        "location": "Various Dragon Lairs",
+        "questGiver": "Tolfdir"
+    },
+    {
+        "id": "quest-013",
+        "title": "Illusion Ritual Spell",
+        "description": "Complete Drevis Neloren's challenge to master illusion magic. Cast powerful illusion spells in dangerous situations across Skyrim.",
+        "difficulty": "Expert",
+        "rewardGold": 750,
+        "rewardItem": "Spell Tome: Hysteria",
+        "isAvailable": true,
+        "location": "Multiple Locations",
+        "questGiver": "Drevis Neloren"
+    },
+    {
+        "id": "quest-014",
+        "title": "Restoration Ritual Spell",
+        "description": "Purify yourself and prove your dedication to restoration magic by completing Colette Marence's trial of faith and healing.",
+        "difficulty": "Expert",
+        "rewardGold": 750,
+        "rewardItem": "Spell Tome: Guardian Circle",
+        "isAvailable": true,
+        "location": "Augur's Shrine",
+        "questGiver": "Colette Marence"
+    },
+    {
+        "id": "quest-015",
+        "title": "Forgotten Names",
+        "description": "Investigate the mysterious Daedric rings found in The Midden. Summon and bind powerful Daedra to recover ancient artifacts.",
+        "difficulty": "Master",
+        "rewardGold": 1200,
+        "rewardItem": "Velehk Sain's Treasure Map",
+        "isAvailable": true,
+        "location": "The Midden Dark",
+        "questGiver": "Self-discovered"
+    },
+    {
+        "id": "quest-016",
+        "title": "Out of Balance",
+        "description": "Help Drevis Neloren stabilize the magical wards throughout the College that have become unstable after recent events.",
+        "difficulty": "Adept",
+        "rewardGold": 450,
+        "rewardItem": "Spell Tome: Invisibility",
+        "isAvailable": true,
+        "location": "College of Winterhold",
+        "questGiver": "Drevis Neloren"
+    },
+    {
+        "id": "quest-017",
+        "title": "Rogue Wizard",
+        "description": "Track down a renegade mage who has been stealing dangerous artifacts from the College. Confront them in their hidden lair.",
+        "difficulty": "Expert",
+        "rewardGold": 850,
+        "rewardItem": "Enchanted Staff of Paralysis",
+        "isAvailable": true,
+        "location": "Sightless Pit",
+        "questGiver": "Savos Aren"
+    },
+    {
+        "id": "quest-018",
+        "title": "Ancient Power",
+        "description": "Investigate reports of ancient magical disturbances at Alftand. Recover powerful artifacts from the depths of the Dwemer ruins.",
+        "difficulty": "Master",
+        "rewardGold": 1100,
+        "rewardItem": "Ancient Nord Amulet",
+        "isAvailable": true,
+        "location": "Alftand",
+        "questGiver": "Urag gro-Shub"
+    }
+];

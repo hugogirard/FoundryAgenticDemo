@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { QuestController } from './quest/quest.controller';
-import { QuestRepository } from './quest/quest.repository';
+import { QuestModule } from './quest/quest.module';
+
 
 @Module({
-  imports: [],
-  controllers: [AppController, QuestController],
-  providers: [QuestRepository],
+  imports: [QuestModule],
+  controllers: [AppController],
+  providers: [],
 })
 export class AppModule { }
