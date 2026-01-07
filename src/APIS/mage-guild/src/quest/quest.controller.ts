@@ -37,6 +37,15 @@ export class QuestController {
         return quest;
     }
 
+    @Get('/enrolled/:adventurerName')
+    @ApiOperation({
+        summary: 'Retrieve quests enrolled for a specific adventurer',
+        description: 'Retrieve quests enrolled for a specific adventurer'
+    })
+    getQuestEnrolled(@Param('adventurerName') adventurerName: string): Array<QuestEnrollement> {
+        return this.questRepository.questByAdventurers(adventurerName);
+    }
+
     @Post('enroll')
     @ApiOperation({
         summary: 'Enroll to mage quest',
@@ -55,5 +64,36 @@ export class QuestController {
 
         return questEnrollement;
     }
+
+    @Post('cancel')
+    @ApiOperation({
+        summary: 'Cancel an enrolled quest',
+        description: 'Cancel a quest enrolled by an adventurer to the mage guild quest'
+    })
+    @ApiBody({
+        type: Enrollement
+    })
+    cancelQuest(@Body() enrollement: Enrollement) {
+        this.questRepository.cancelQuest(enrollement.questId, enrollement.adventurerName);
+    }
+
+    @Post('complete')
+    @ApiOperation({
+        summary: 'Complete an enrolled quest',
+        description: 'Complete a quest enrolled by an adventurer to the mage guild quest'
+    })
+    @ApiBody({
+        type: Enrollement
+    })
+    completeQuest(@Body() enrollement: Enrollement) {
+        const quest = this.questRepository.completeQuest(enrollement.questId, enrollement.adventurerName);
+
+        if (quest === null) {
+            throw new BadRequestException(`The quest ${enrollement.questId} for adventurer ${enrollement.adventurerName} cannot be completed`);
+        }
+
+        return quest;
+    }
+
 
 }

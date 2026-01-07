@@ -11,7 +11,7 @@ export class QuestRepository {
 
     constructor() {
         this.quests = quests;
-        this.questEnrollements = [];
+        this.questEnrollements = new Array<QuestEnrollement>();
     }
 
     getAvailableQuests(): Array<Quest> {
@@ -45,5 +45,38 @@ export class QuestRepository {
         }
 
         return null
+    }
+
+    completeQuest(id: string, adventurerName: string): QuestEnrollement | null {
+        const idx = this.questEnrollements.findIndex(e => e.id === id && e.adventurerName === adventurerName);
+
+        if (idx != -1) {
+            const enrollement = this.questEnrollements[idx];
+
+            enrollement.status = QuestStatus.Completed;
+            enrollement.rewardClaimed = true;
+            enrollement.completeDate = new Date().toISOString();
+
+            this.questEnrollements[idx] = enrollement;
+
+            return enrollement;
+        }
+
+        return null;
+    }
+
+    cancelQuest(id: string, adventurerName: string): void {
+
+        const idxQuest = this.quests.findIndex(x => x.id === id);
+        const idxEnroll = this.questEnrollements.findIndex(e => e.id === id && e.adventurerName === adventurerName);
+
+        if (idxEnroll != -1 && idxQuest != -1) {
+            this.questEnrollements.splice(idxEnroll, 1);
+            this.quests[idxQuest].isAvailable = true;
+        }
+    }
+
+    questByAdventurers(adventurerName: string): Array<QuestEnrollement> {
+        return this.questEnrollements.filter(x => x.adventurerName === adventurerName);
     }
 }
