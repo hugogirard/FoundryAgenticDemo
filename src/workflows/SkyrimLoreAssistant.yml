@@ -1,0 +1,56 @@
+kind: workflow
+trigger:
+  kind: OnConversationStart
+  id: trigger_wf
+  actions:
+    - kind: Question
+      variable: Local.User_Question
+      id: ask-intent-question
+      entity: StringPrebuiltEntity
+      skipQuestionMode: SkipOnFirstExecutionIfVariableHasValue
+      prompt: |-
+        🏔️ Welcome, traveler, to the Hall of Knowledge!
+
+        I am connected to the Jarl's court, where the Courier, Court Wizard, and Jarl 
+        work together to answer your questions about Skyrim lore.
+
+        What knowledge do you seek? Ask me about:
+        • The Greybeards and their Way of the Voice
+        • Dragons like Paarthurnax and Alduin
+        • The Thu'um and dragon shouts
+        • Sacred locations like High Hrothgar
+        • The Dragonborn and their destiny
+        • Factions like the Companions or College of Winterhold
+        • The history of the Dragon War
+
+        Ask your question, and the Courier will deliver it to the Court Wizard, 
+        who will consult the ancient tomes before the Jarl delivers the final answer.
+    - kind: InvokeAzureAgent
+      id: action-invoke-courrier
+      agent:
+        name: CourrierAgent
+      input:
+        messages: =Local.User_Question
+      output:
+        autoSend: false
+    - kind: InvokeAzureAgent
+      id: action-invoke-court-wizard
+      agent:
+        name: CourtWizardAgent
+      input:
+        messages: =System.LastMessage
+      output:
+        autoSend: false
+    - kind: InvokeAzureAgent
+      id: action-invoke-jarl
+      agent:
+        name: TheJarlAgent
+      input:
+        messages: =System.LastMessage
+      output:
+        autoSend: true
+    - kind: EndConversation
+      id: action-1767881293892
+id: ""
+name: SkyrimLoreAssistant
+description: ""
